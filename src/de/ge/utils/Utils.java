@@ -6,7 +6,7 @@ import java.net.UnknownHostException;
 
 public class Utils {
 	
-	public static boolean debug = false;
+	public static boolean debug = true;
 	public static String FontName = "Comic Sans MS";
 	public static Font NormalFont = new Font(FontName, Font.PLAIN, 14);
 	public static Font SecondHeaderFont = new Font(FontName, Font.BOLD, 18);
@@ -14,7 +14,7 @@ public class Utils {
 
 	public static boolean hasInternetConnection() {
 		try {
-		    InetAddress.getByName("37.114.34.14");
+		    InetAddress.getByName("test.abendspieler.de");
 		    if(Utils.debug)
 		    	System.out.println("User hat Internet."); 
 		    

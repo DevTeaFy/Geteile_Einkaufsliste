@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import de.ge.utils.Tabellen;
 import de.ge.utils.Utils;
 
 public class MySQL {
@@ -66,8 +67,17 @@ public class MySQL {
 	}
 	
 	
-	public String getString() {
-		return "LUL";
+	public String getString(String Werte,Tabellen Tabelle,String Seletion,String Value,String Typ) {
+		ResultSet rs = getResult("SELECT "+Werte+" FORM "+Tabelle.getName()+" WHERE "+Seletion+"="+Value);
+		try {
+			String toreturn = rs.getString(Typ);
+			return toreturn;
+		} catch (SQLException e) {
+			if(Utils.debug)
+				e.printStackTrace();
+			
+			return "Error";
+		}
 	}
 	
 	

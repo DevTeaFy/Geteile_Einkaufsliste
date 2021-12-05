@@ -18,6 +18,7 @@ import javax.swing.WindowConstants;
 
 import de.ge.main.Geteilte_Einkaufsliste;
 import de.ge.utils.PrettyColor;
+import de.ge.utils.Tabellen;
 import de.ge.utils.Utils;
 
 public class LoginScreen {
@@ -88,14 +89,15 @@ public class LoginScreen {
 						JOptionPane.showMessageDialog(cp,"Du hast kein Internet.","Internet",JOptionPane.ERROR_MESSAGE);
 						return;
 					}
+					
 					if(Geteilte_Einkaufsliste.getMySQL().getCon() == null) {
 						JOptionPane.showMessageDialog(cp,"Du hast keine verbindung zur Datenbank","Datenbank",JOptionPane.ERROR_MESSAGE);
 						return;
 					}
-					
+					int id = 0;
 					try {
-					int id = Integer.valueOf(useridfield.getText());
-					}catch (NumberFormatException e1) {
+						id = Integer.valueOf(useridfield.getText());
+					} catch (NumberFormatException e1) {
 						if(Utils.debug) {
 							System.out.println("User hat Buchstaben statt Zahl eingegeben.");
 							e1.printStackTrace();
@@ -105,8 +107,12 @@ public class LoginScreen {
 						return;
 					}
 					String pw = pwfield.getText();
+					String datenbankpw = Geteilte_Einkaufsliste.getMySQL().getString("ID,Password", Tabellen.USER, "ID", String.valueOf(id), "Password");
 					
 					
+					if(pw.equals(datenbankpw)) {
+						
+					}
 					
 					if(Utils.debug)
 						System.out.println("------------- Login Ende -------------");
