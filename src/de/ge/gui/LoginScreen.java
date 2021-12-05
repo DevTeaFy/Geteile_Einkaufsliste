@@ -136,6 +136,15 @@ public class LoginScreen {
 	    btnRegistrieren.setFocusable(false);
 	    btnRegistrieren.setBorderPainted(false);
 	    btnRegistrieren.setContentAreaFilled(false);
+	    btnRegistrieren.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(e.getSource() == btnRegistrieren) {
+					new RegisterScreen();
+				}
+			}
+		});
 	    btnRegistrieren.setFont(Utils.NormalFont);
 	    btnRegistrieren.setForeground(Color.GREEN);
 	    cp.add(btnRegistrieren);
