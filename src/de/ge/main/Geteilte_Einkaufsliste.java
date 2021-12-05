@@ -15,7 +15,6 @@ public class Geteilte_Einkaufsliste {
         mySQL.setPort("");
         mySQL.setUsername("");
         mySQL.setPassword("");
-        //Ich bin Hier!!!
 	}
 
 	public static MySQL getMySQL() {
