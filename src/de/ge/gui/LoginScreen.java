@@ -43,7 +43,7 @@ public class LoginScreen {
 	    int y = (d.height - this.frame.getSize().height) / 2;
 	    this.frame.setLocation(x, y);
 	    this.frame.setTitle("Login -> Geteilte Einkaufsliste");
-	    this.frame. setResizable(false);
+	    this.frame.setResizable(false);
 	    Container cp = this.frame.getContentPane();
 	    cp.setLayout(null);
 	    
@@ -59,14 +59,24 @@ public class LoginScreen {
 	    lblUserID.setText("UserID:");
 	    lblUserID.setFont(Utils.NormalFont);
 	    lblUserID.setForeground(PrettyColor.GREEN);
+	    cp.add(lblUserID);
 	    
 	    useridfield.setBounds(215, 65, 150, 20);
 	    useridfield.setText("");
 	    useridfield.setToolTipText("Bitte nur Zahlen eingeben");
-	 
 	    cp.add(useridfield);
+	   
+	    lblPasswort.setBounds(115, 115, 150, 20);
+	    lblPasswort.setText("Passwort:");
+	    lblPasswort.setFont(Utils.NormalFont);
+	    lblPasswort.setForeground(PrettyColor.GREEN);
+	    cp.add(lblPasswort);
 	    
-	    cp.add(lblUserID);
+	    pwfield.setBounds(215, 115, 150, 20);
+	    cp.add(pwfield);
+	    
+	    
+	    
 	    btnLogin.setBounds(100, 160, 100, 25);
 	    btnLogin.setText("Login");
 	    btnLogin.setMargin(new Insets(2, 2, 2, 2));
@@ -123,13 +133,6 @@ public class LoginScreen {
 		});
 	    cp.add(btnLogin);
 	    
-	    pwfield.setBounds(215, 115, 150, 20);
-	    cp.add(pwfield);
-	    lblPasswort.setBounds(115, 115, 150, 20);
-	    lblPasswort.setText("Passwort:");
-	    lblPasswort.setFont(Utils.NormalFont);
-	    lblPasswort.setForeground(PrettyColor.GREEN);
-	    cp.add(lblPasswort);
 	    btnRegistrieren.setBounds(225, 160, 115, 25);
 	    btnRegistrieren.setText("Registrieren");
 	    btnRegistrieren.setMargin(new Insets(2, 2, 2, 2));
