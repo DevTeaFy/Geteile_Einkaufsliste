@@ -107,11 +107,12 @@ public class LoginScreen {
 						return;
 					}
 					String pw = pwfield.getText();
-					String datenbankpw = Geteilte_Einkaufsliste.getMySQL().getString("ID,Password", Tabellen.USER, "ID", String.valueOf(id), "Password");
-					
+					String datenbankpw = Geteilte_Einkaufsliste.getMySQL().getString("*", Tabellen.USER, "ID", id, "Password");
 					
 					if(pw.equals(datenbankpw)) {
-						
+						System.out.println("Login erfolgreich");
+					}else {
+						System.out.println("Pw falsch!!!");
 					}
 					
 					if(Utils.debug)

@@ -12,6 +12,7 @@ public class CloseWindowListener implements WindowListener{
 	public void windowOpened(WindowEvent e) {
 		if(Utils.hasInternetConnection()) {
 			Geteilte_Einkaufsliste.getMySQL().connectMySQL();
+			Geteilte_Einkaufsliste.getMySQL().listIDS();
 		}
 	}
 

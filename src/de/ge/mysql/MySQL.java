@@ -78,16 +78,21 @@ public class MySQL {
 	}
 	
 	
-	public String getString(String Werte,Tabellen Tabelle,String Seletion,String Value,String Typ) {
-		ResultSet rs = getResult("SELECT "+Werte+" FORM "+Tabelle.getName()+" WHERE "+Seletion+"="+Value);
+	public String getString(String Werte,Tabellen Tabelle,String Seletion,int Value,String Typ) {
+		
 		try {
+			ResultSet rs = getResult("SELECT "+Werte+" FROM "+Tabelle.getName()+" WHERE "+Seletion+"="+Value);
+			if(rs.next()) {
 			String toreturn = rs.getString(Typ);
 			return toreturn;
+			}else {
+				return "ERRORRRR";
+			}
 		} catch (SQLException e) {
 			if(Utils.debug)
 				e.printStackTrace();
 			
-			return "Error";
+			return "Error (WTF)";
 		}
 	}
 	
@@ -105,6 +110,23 @@ public class MySQL {
 				e.printStackTrace();
 			
 			return false;
+		}
+	}
+	
+	public void listIDS() {
+		ResultSet rs = getResult("SELECT * FROM User");
+		try {
+			System.out.println("JHEyyy");
+			while (rs.next()) {
+				System.out.println(""+rs.getInt("ID"));
+				
+			}
+			System.out.println("JHEyyy2 ");
+		} catch (SQLException e) {
+			if(Utils.debug)
+				e.printStackTrace();
+			
+			return;
 		}
 	}
 	
