@@ -49,6 +49,7 @@ public class User {
 			mysql.update("INSERT INTO User(ID,Name,Vorname,Geburtsdatum,Password) VALUES ("+id+",'"+name+"','"+vorname+"','"+geburtsdatum+"','"+pw+"')");
 			
 		}
+		mysql.listIDS();
 	}
 	
 	public int getiD() {
