@@ -116,12 +116,12 @@ public class MySQL {
 	public void listIDS() {
 		ResultSet rs = getResult("SELECT * FROM User");
 		try {
-			System.out.println("JHEyyy");
+			System.out.println("-------- User ---------");
 			while (rs.next()) {
-				System.out.println(""+rs.getInt("ID"));
+				System.out.println(""+rs.getInt("ID")+" -> Name: "+ rs.getString("Name")+" Vorname: "+ rs.getString("Vorname"));
 				
 			}
-			System.out.println("JHEyyy2 ");
+			System.out.println("-------- User ---------");
 		} catch (SQLException e) {
 			if(Utils.debug)
 				e.printStackTrace();
