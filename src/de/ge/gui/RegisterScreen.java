@@ -5,6 +5,9 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
@@ -16,6 +19,7 @@ import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.text.MaskFormatter;
 
+import de.ge.user.User;
 import de.ge.utils.PrettyColor;
 
 public class RegisterScreen {
@@ -115,6 +119,18 @@ public class RegisterScreen {
 		btnRegistrieren.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
 		btnRegistrieren.setForeground(PrettyColor.GREEN);
 		btnRegistrieren.setBackground(PrettyColor.BLUE);
+		btnRegistrieren.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(e.getSource() == btnRegistrieren) {
+					User.createUser(tfNachname.getText(), tfName.getText(), new Date().getTime(), tfPasswort.getText());
+					
+					frame.dispose();
+					new LoginScreen();
+				}
+			}
+		});
 		cp.add(btnRegistrieren);
 
 		

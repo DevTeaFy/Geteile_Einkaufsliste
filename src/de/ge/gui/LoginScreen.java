@@ -141,6 +141,7 @@ public class LoginScreen {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(e.getSource() == btnRegistrieren) {
+					frame.dispose();
 					new RegisterScreen();
 				}
 			}

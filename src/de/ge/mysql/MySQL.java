@@ -26,6 +26,8 @@ public class MySQL {
 			con = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database + "?autoReconnect=true", username, password);
 			if(Utils.debug)
 			System.out.println("Datenbank erfolgreich verbunden!");
+			
+			createTables();
 		} catch (SQLException e) {
 			if(Utils.debug) {
 				System.out.println("Datenbank nicht verbunden!");
@@ -58,11 +60,20 @@ public class MySQL {
 		}
 		try {
 			Statement st = con.createStatement();
-			st.executeUpdate("CREATE TABLE IF NOT EXISTS User(ID int NOT NULL AUTO_INCREMENT, Name VARCHAR(50), Vorname VARCHAR(50), Password VARCHAR(50), PRIMARY KEY(ID))");
+			if(Utils.debug)
+				System.out.println("Versuche Tabels anzulegen");
+		
+			st.executeUpdate("CREATE TABLE IF NOT EXISTS User(ID int NOT NULL AUTO_INCREMENT, Name VARCHAR(50), Vorname VARCHAR(50), Geburtsdatum Long, Password VARCHAR(50), PRIMARY KEY(ID))");
 			st.executeUpdate("CREATE TABLE IF NOT EXISTS U_IN_G(UserID int NOT NULL, GruppenID int NOT NULL)");
 //			st.executeUpdate("CREATE TABLE IF NOT EXISTS Gruppe(GruppenID int NOT NULL AUTO_INCREMENT, Name VARCHAR(50), PRIMARY KEY(ID))");
+
+			if(Utils.debug)
+				System.out.println("Tabels erfolgreich angelegt oder noch existent");
 		} catch (SQLException e) {
-			e.printStackTrace();
+			if(Utils.debug) {
+				System.out.println("Fehler beim Tabels anlegen");
+				e.printStackTrace();
+			}
 		}
 	}
 	
@@ -77,6 +88,23 @@ public class MySQL {
 				e.printStackTrace();
 			
 			return "Error";
+		}
+	}
+	
+	
+	public boolean userIDExists(int ID) {
+		ResultSet rs = getResult("SELECT * FROM User WHERE ID="+ID);
+		try {
+			if(rs.next()) {
+				return true;
+			}else {
+				return false;
+			}
+		} catch (SQLException e) {
+			if(Utils.debug)
+				e.printStackTrace();
+			
+			return false;
 		}
 	}
 	
