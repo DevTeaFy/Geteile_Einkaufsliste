@@ -8,6 +8,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -35,8 +36,8 @@ public class LoginScreen {
 	public LoginScreen() { 
 	    this.frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	    this.frame.addWindowListener(new CloseWindowListener());
-	    int frameWidth = 527; 
-	    int frameHeight = 290;
+	    int frameWidth = 400; 
+	    int frameHeight = 250;
 	    this.frame.setSize(frameWidth, frameHeight);
 	    Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
 	    int x = (d.width - this.frame.getSize().width) / 2;
@@ -46,8 +47,10 @@ public class LoginScreen {
 	    this.frame.setResizable(false);
 	    Container cp = this.frame.getContentPane();
 	    cp.setLayout(null);
+		int yanfang = 15;
+		int abstand = 20;
 	    
-	    lblueberschrift.setBounds(206, 21, 110, 29);
+	    lblueberschrift.setBounds((int)((frameWidth/2)-(110/2)), yanfang, 110, 30);
 	    lblueberschrift.setText("Login");
 	    lblueberschrift.setBackground(PrettyColor.BLUE);
 	    lblueberschrift.setOpaque(true);
@@ -55,29 +58,34 @@ public class LoginScreen {
 	    lblueberschrift.setForeground(PrettyColor.WHITE);
 	    cp.add(lblueberschrift);
 	    
-	    lblUserID.setBounds(115, 65, 100, 20);
+	    lblUserID.setBounds((int)((frameWidth/2)-(100*1.5)), (lblueberschrift.getBounds().y+lblueberschrift.getBounds().height+abstand), 100, 20);
 	    lblUserID.setText("UserID:");
 	    lblUserID.setFont(Utils.NormalFont);
 	    lblUserID.setForeground(PrettyColor.GREEN);
 	    cp.add(lblUserID);
 	    
-	    useridfield.setBounds(215, 65, 150, 20);
+	    useridfield.setBounds((int)((frameWidth/2)-(25*1.5)), (lblueberschrift.getBounds().y+lblueberschrift.getBounds().height+abstand), 150, 20);
 	    useridfield.setText("");
+	    useridfield.setBorder(BorderFactory.createEmptyBorder());
+	    useridfield.setBackground(PrettyColor.LITHEBLUE);
+	    useridfield.setForeground(PrettyColor.WHITE);
 	    useridfield.setToolTipText("Bitte nur Zahlen eingeben");
 	    cp.add(useridfield);
 	   
-	    lblPasswort.setBounds(115, 115, 150, 20);
+	    lblPasswort.setBounds((int)((frameWidth/2)-(100*1.5)), (useridfield.getBounds().y+useridfield.getBounds().height+abstand), 100, 20);
 	    lblPasswort.setText("Passwort:");
 	    lblPasswort.setFont(Utils.NormalFont);
 	    lblPasswort.setForeground(PrettyColor.GREEN);
 	    cp.add(lblPasswort);
-	    
-	    pwfield.setBounds(215, 115, 150, 20);
+
+	    pwfield.setBorder(BorderFactory.createEmptyBorder());
+	    pwfield.setBackground(PrettyColor.LITHEBLUE);
+	    pwfield.setBounds((int)((frameWidth/2)-(25*1.5)), (useridfield.getBounds().y+useridfield.getBounds().height+abstand), 150, 20);
 	    cp.add(pwfield);
 	    
 	    
 	    
-	    btnLogin.setBounds(100, 160, 100, 25);
+	    btnLogin.setBounds((int)((frameWidth/2)-(100*1.5)), (pwfield.getBounds().y+pwfield.getBounds().height+abstand), 100, 25);
 	    btnLogin.setText("Login");
 	    btnLogin.setMargin(new Insets(2, 2, 2, 2));
 	    btnLogin.setBorderPainted(false);
@@ -111,9 +119,9 @@ public class LoginScreen {
 						if(Utils.debug) {
 							System.out.println("User hat Buchstaben statt Zahl eingegeben.");
 							e1.printStackTrace();
+							System.out.println("------------- Login Ende -------------");
 						}
 						JOptionPane.showMessageDialog(cp,"Die UserID kann nur Zahlen enthalten","Hilfe",JOptionPane.ERROR_MESSAGE);
-						System.out.println("------------- Login Ende -------------");
 						return;
 					}
 					String pw = pwfield.getText();
@@ -128,12 +136,11 @@ public class LoginScreen {
 					if(Utils.debug)
 						System.out.println("------------- Login Ende -------------");
 				}
-				
 			}
 		});
 	    cp.add(btnLogin);
 	    
-	    btnRegistrieren.setBounds(225, 160, 115, 25);
+	    btnRegistrieren.setBounds((int)((frameWidth/2)-(25*1.5)), (pwfield.getBounds().y+pwfield.getBounds().height+abstand), 115, 25);
 	    btnRegistrieren.setText("Registrieren");
 	    btnRegistrieren.setMargin(new Insets(2, 2, 2, 2));
 	    btnRegistrieren.setBackground(PrettyColor.BLUE);

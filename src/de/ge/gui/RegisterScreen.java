@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
@@ -25,6 +26,8 @@ import de.ge.utils.PrettyColor;
 public class RegisterScreen {
 	private JFrame frame = new JFrame();
 
+	private JLabel lblBenutzerName = new JLabel();
+	private JTextField tfBenutzerName = new JTextField();
 	private JLabel lblName = new JLabel();
 	private JTextField tfName = new JTextField();
 	private JLabel lblNachname = new JLabel();
@@ -42,7 +45,7 @@ public class RegisterScreen {
 	public RegisterScreen() {
 		this.frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		int frameWidth = 365;
-		int frameHeight = 483;
+		int frameHeight = 510;
 		this.frame.setSize(frameWidth, frameHeight);
 		Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
 		int x = (d.width - this.frame.getSize().width) / 2;
@@ -53,7 +56,8 @@ public class RegisterScreen {
 		Container cp = this.frame.getContentPane();
 		cp.setBackground(PrettyColor.BLUE);
 		cp.setLayout(null);
-		
+		int yanfang = 15;
+		int abstand = 7;
 		
 		
 		lblRegestrierung.setText("Regestrierung");
@@ -61,11 +65,28 @@ public class RegisterScreen {
 		lblRegestrierung.setOpaque(false);
 		lblRegestrierung.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblRegestrierung.setHorizontalAlignment(SwingConstants.CENTER);
-		lblRegestrierung.setBounds((int)((frameWidth/2)-(175/2)), 32, 175, 33);
+		lblRegestrierung.setBounds((int)((frameWidth/2)-(175/2)), yanfang, 175, 30);
 		lblRegestrierung.setForeground(PrettyColor.WHITE);
 		cp.add(lblRegestrierung);
 		
-		lblName.setBounds(120, 80, 110, 27);
+		
+		lblBenutzerName.setBounds((int)((frameWidth/2)-(130/2)), (lblRegestrierung.getBounds().y+lblRegestrierung.getBounds().height+abstand), 130, 30);
+		lblBenutzerName.setText("Benutzername:");
+		lblBenutzerName.setOpaque(false);
+		lblBenutzerName.setFont(new Font("Comic Sans MS", Font.BOLD, 16));
+		lblBenutzerName.setHorizontalTextPosition(SwingConstants.CENTER);
+		lblBenutzerName.setHorizontalAlignment(SwingConstants.CENTER);
+		lblBenutzerName.setForeground(PrettyColor.GREEN);
+		cp.add(lblBenutzerName);
+		
+		tfBenutzerName.setBounds((int)((frameWidth/2)-(150/2)), (lblBenutzerName.getBounds().y+lblBenutzerName.getBounds().height+(abstand/2)), 150, 20);
+		tfBenutzerName.setText("");
+		tfBenutzerName.setBackground(PrettyColor.LITHEBLUE);
+		tfBenutzerName.setBorder(BorderFactory.createEmptyBorder());
+		cp.add(tfBenutzerName);
+		
+		
+		lblName.setBounds((int)((frameWidth/2)-(110/2)), (tfBenutzerName.getBounds().y+tfBenutzerName.getBounds().height+abstand), 110, 30);
 		lblName.setText("Name:");
 		lblName.setOpaque(false);
 		lblName.setFont(new Font("Comic Sans MS", Font.BOLD, 16));
@@ -74,53 +95,64 @@ public class RegisterScreen {
 		lblName.setForeground(PrettyColor.GREEN);
 		cp.add(lblName);
 		
-		tfName.setBounds(104, 112, 150, 20);
+		tfName.setBounds((int)((frameWidth/2)-(150/2)), (lblName.getBounds().y+lblName.getBounds().height+(abstand/2)), 150, 20);
 		tfName.setText("");
+		tfName.setBackground(PrettyColor.LITHEBLUE);
+		tfName.setBorder(BorderFactory.createEmptyBorder());
 		cp.add(tfName);
 		
 		
-		lblNachname.setBounds(120, 136, 110, 27);
+		lblNachname.setBounds((int)((frameWidth/2)-(110/2)), (tfName.getBounds().y+tfName.getBounds().height+abstand), 110, 30);
 		lblNachname.setText("Nachname:");
 		lblNachname.setFont(new Font("Comic Sans MS", Font.BOLD, 16));
 		lblNachname.setForeground(PrettyColor.GREEN);
 		lblNachname.setHorizontalAlignment(SwingConstants.CENTER);
 		cp.add(lblNachname);
 		
-		tfNachname.setBounds(104, 168, 150, 20);
+		tfNachname.setBounds((int)((frameWidth/2)-(150/2)), (lblNachname.getBounds().y+lblNachname.getBounds().height+(abstand/2)), 150, 20);
+		tfNachname.setBorder(BorderFactory.createEmptyBorder());
+		tfNachname.setBackground(PrettyColor.LITHEBLUE);
 		cp.add(tfNachname);
 		
+		
 
-		lblGeburtsdatum.setBounds(120, 192, 119, 27);
+		lblGeburtsdatum.setBounds((int)((frameWidth/2)-(120/2)), (tfNachname.getBounds().y+tfNachname.getBounds().height+(abstand)), 120, 30);
 		lblGeburtsdatum.setText("Geburtsdatum:");
 		lblGeburtsdatum.setHorizontalAlignment(SwingConstants.CENTER);
 		lblGeburtsdatum.setFont(new Font("Comic Sans MS", Font.BOLD, 16));
 		lblGeburtsdatum.setForeground(PrettyColor.GREEN);
 		cp.add(lblGeburtsdatum);
 		
-		ftfGeburtsdatum.setBounds(104, 224, 150, 20);
+		ftfGeburtsdatum.setBounds((int)((frameWidth/2)-(150/2)), (lblGeburtsdatum.getBounds().y+lblGeburtsdatum.getBounds().height+(abstand/2)), 150, 20);
+		ftfGeburtsdatum.setBorder(BorderFactory.createEmptyBorder());
+		ftfGeburtsdatum.setBackground(PrettyColor.LITHEBLUE);
 		cp.add(ftfGeburtsdatum);
 		
-		lblPasswort.setBounds(120, 248, 110, 27);
+		lblPasswort.setBounds((int)((frameWidth/2)-(110/2)), (ftfGeburtsdatum.getBounds().y+ftfGeburtsdatum.getBounds().height+(abstand)), 110, 30);
 		lblPasswort.setText("Passwort:");
 		lblPasswort.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPasswort.setFont(new Font("Comic Sans MS", Font.BOLD, 16));
 		lblPasswort.setForeground(PrettyColor.GREEN);
 		cp.add(lblPasswort);
 		
-		tfPasswort.setBounds(104, 288, 150, 20);
+		tfPasswort.setBounds((int)((frameWidth/2)-(150/2)), (lblPasswort.getBounds().y+lblPasswort.getBounds().height+(abstand/2)), 150, 20);
+		tfPasswort.setBorder(BorderFactory.createEmptyBorder());
+		tfPasswort.setBackground(PrettyColor.LITHEBLUE);
 		cp.add(tfPasswort);
 		
-		lblPasswortwiederholen.setBounds((int)((frameWidth/2)-(175/2)), 312, 175, 27);
+		lblPasswortwiederholen.setBounds((int)((frameWidth/2)-(175/2)), (tfPasswort.getBounds().y+tfPasswort.getBounds().height+(abstand)), 175, 30);
 		lblPasswortwiederholen.setText("Passwort wiederholen:");
 		lblPasswortwiederholen.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPasswortwiederholen.setFont(new Font("Comic Sans MS", Font.BOLD, 16));
 		lblPasswortwiederholen.setForeground(PrettyColor.GREEN);
 		cp.add(lblPasswortwiederholen);
 		
-		tfPasswortw.setBounds(104, 344, 150, 20);
+		tfPasswortw.setBounds((int)((frameWidth/2)-(150/2)), (lblPasswortwiederholen.getBounds().y+lblPasswortwiederholen.getBounds().height+(abstand/2)), 150, 20);
+		tfPasswortw.setBorder(BorderFactory.createEmptyBorder());
+		tfPasswortw.setBackground(PrettyColor.LITHEBLUE);
 		cp.add(tfPasswortw);
 		
-		btnRegistrieren.setBounds(120, 376, 131, 41);
+		btnRegistrieren.setBounds((int)((frameWidth/2)-(130/2)), (tfPasswortw.getBounds().y+tfPasswortw.getBounds().height+(abstand)), 130, 40);
 		btnRegistrieren.setText("Registrieren");
 		btnRegistrieren.setMargin(new Insets(2, 2, 2, 2));
 		btnRegistrieren.setFocusable(false);
@@ -131,6 +163,7 @@ public class RegisterScreen {
 		btnRegistrieren.setBackground(PrettyColor.BLUE);
 		btnRegistrieren.addActionListener(new ActionListener() {
 			
+			@SuppressWarnings("deprecation")
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(e.getSource() == btnRegistrieren) {
