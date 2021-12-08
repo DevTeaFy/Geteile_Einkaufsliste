@@ -68,6 +68,7 @@ public class LoginScreen {
 	    useridfield.setText("");
 	    useridfield.setBorder(BorderFactory.createEmptyBorder());
 	    useridfield.setBackground(PrettyColor.LITHEBLUE);
+	    useridfield.setForeground(PrettyColor.WHITE);
 	    useridfield.setToolTipText("Bitte nur Zahlen eingeben");
 	    cp.add(useridfield);
 	   
@@ -112,20 +113,8 @@ public class LoginScreen {
 						JOptionPane.showMessageDialog(cp,"Du hast keine verbindung zur Datenbank","Datenbank",JOptionPane.ERROR_MESSAGE);
 						return;
 					}
-					int id = 0;
-					try {
-						id = Integer.valueOf(useridfield.getText());
-					} catch (NumberFormatException e1) {
-						if(Utils.debug) {
-							System.out.println("User hat Buchstaben statt Zahl eingegeben.");
-							e1.printStackTrace();
-							System.out.println("------------- Login Ende -------------");
-						}
-						JOptionPane.showMessageDialog(cp,"Die UserID kann nur Zahlen enthalten","Hilfe",JOptionPane.ERROR_MESSAGE);
-						return;
-					}
 					String pw = pwfield.getText();
-					String datenbankpw = Geteilte_Einkaufsliste.getMySQL().getString("*", Tabellen.USER, "ID", id, "Password");
+					String datenbankpw = Geteilte_Einkaufsliste.getMySQL().getString("*", Tabellen.USER, "Benutzername", useridfield.getText(), "Password");
 					
 					if(pw.equals(datenbankpw)) {
 						System.out.println("Login erfolgreich");
