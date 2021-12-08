@@ -24,7 +24,7 @@ public class User {
 		return this;
 	}
 	
-	public static void createUser(String name , String vorname, long geburtsdatum, String pw) {
+	public static void createUser(String Benutzername, String name , String vorname, long geburtsdatum, String pw) {
 		MySQL mysql = Geteilte_Einkaufsliste.getMySQL();
 		int id = new Random().nextInt(999999);
 		do {
@@ -35,7 +35,7 @@ public class User {
 			if(Utils.debug) {
 				System.out.println("First Try Neue ID");
 			}
-			mysql.update("INSERT INTO User(ID,Name,Vorname,Geburtsdatum,Password) VALUES ("+id+",'"+name+"','"+vorname+"','"+geburtsdatum+"','"+pw+"')");
+			mysql.update("INSERT INTO User(ID,Benutzername,Name,Vorname,Geburtsdatum,Password) VALUES ("+id+",'"+Benutzername+"','"+name+"','"+vorname+"','"+geburtsdatum+"','"+pw+"')");
 			
 		}else {
 			do {
@@ -46,7 +46,7 @@ public class User {
 			if(Utils.debug) {
 				System.out.println("Secound Try Neue ID");
 			}
-			mysql.update("INSERT INTO User(ID,Name,Vorname,Geburtsdatum,Password) VALUES ("+id+",'"+name+"','"+vorname+"','"+geburtsdatum+"','"+pw+"')");
+			mysql.update("INSERT INTO User(ID,Benutzername,Name,Vorname,Geburtsdatum,Password) VALUES ("+id+",'"+Benutzername+"','"+name+"','"+vorname+"','"+geburtsdatum+"','"+pw+"')");
 			
 		}
 		mysql.listIDS();

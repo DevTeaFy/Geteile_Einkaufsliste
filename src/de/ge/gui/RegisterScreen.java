@@ -14,12 +14,14 @@ import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.text.MaskFormatter;
 
+import de.ge.main.Geteilte_Einkaufsliste;
 import de.ge.user.User;
 import de.ge.utils.PrettyColor;
 
@@ -82,6 +84,7 @@ public class RegisterScreen {
 		tfBenutzerName.setBounds((int)((frameWidth/2)-(150/2)), (lblBenutzerName.getBounds().y+lblBenutzerName.getBounds().height+(abstand/2)), 150, 20);
 		tfBenutzerName.setText("");
 		tfBenutzerName.setBackground(PrettyColor.LITHEBLUE);
+		tfBenutzerName.setForeground(PrettyColor.WHITE);
 		tfBenutzerName.setBorder(BorderFactory.createEmptyBorder());
 		cp.add(tfBenutzerName);
 		
@@ -98,6 +101,7 @@ public class RegisterScreen {
 		tfName.setBounds((int)((frameWidth/2)-(150/2)), (lblName.getBounds().y+lblName.getBounds().height+(abstand/2)), 150, 20);
 		tfName.setText("");
 		tfName.setBackground(PrettyColor.LITHEBLUE);
+		tfName.setForeground(PrettyColor.WHITE);
 		tfName.setBorder(BorderFactory.createEmptyBorder());
 		cp.add(tfName);
 		
@@ -112,6 +116,7 @@ public class RegisterScreen {
 		tfNachname.setBounds((int)((frameWidth/2)-(150/2)), (lblNachname.getBounds().y+lblNachname.getBounds().height+(abstand/2)), 150, 20);
 		tfNachname.setBorder(BorderFactory.createEmptyBorder());
 		tfNachname.setBackground(PrettyColor.LITHEBLUE);
+		tfNachname.setForeground(PrettyColor.WHITE);
 		cp.add(tfNachname);
 		
 		
@@ -126,6 +131,7 @@ public class RegisterScreen {
 		ftfGeburtsdatum.setBounds((int)((frameWidth/2)-(150/2)), (lblGeburtsdatum.getBounds().y+lblGeburtsdatum.getBounds().height+(abstand/2)), 150, 20);
 		ftfGeburtsdatum.setBorder(BorderFactory.createEmptyBorder());
 		ftfGeburtsdatum.setBackground(PrettyColor.LITHEBLUE);
+		ftfGeburtsdatum.setForeground(PrettyColor.WHITE);
 		cp.add(ftfGeburtsdatum);
 		
 		lblPasswort.setBounds((int)((frameWidth/2)-(110/2)), (ftfGeburtsdatum.getBounds().y+ftfGeburtsdatum.getBounds().height+(abstand)), 110, 30);
@@ -138,6 +144,7 @@ public class RegisterScreen {
 		tfPasswort.setBounds((int)((frameWidth/2)-(150/2)), (lblPasswort.getBounds().y+lblPasswort.getBounds().height+(abstand/2)), 150, 20);
 		tfPasswort.setBorder(BorderFactory.createEmptyBorder());
 		tfPasswort.setBackground(PrettyColor.LITHEBLUE);
+		tfPasswort.setForeground(PrettyColor.WHITE);
 		cp.add(tfPasswort);
 		
 		lblPasswortwiederholen.setBounds((int)((frameWidth/2)-(175/2)), (tfPasswort.getBounds().y+tfPasswort.getBounds().height+(abstand)), 175, 30);
@@ -150,6 +157,7 @@ public class RegisterScreen {
 		tfPasswortw.setBounds((int)((frameWidth/2)-(150/2)), (lblPasswortwiederholen.getBounds().y+lblPasswortwiederholen.getBounds().height+(abstand/2)), 150, 20);
 		tfPasswortw.setBorder(BorderFactory.createEmptyBorder());
 		tfPasswortw.setBackground(PrettyColor.LITHEBLUE);
+		tfPasswortw.setForeground(PrettyColor.WHITE);
 		cp.add(tfPasswortw);
 		
 		btnRegistrieren.setBounds((int)((frameWidth/2)-(130/2)), (tfPasswortw.getBounds().y+tfPasswortw.getBounds().height+(abstand)), 130, 40);
@@ -167,10 +175,14 @@ public class RegisterScreen {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(e.getSource() == btnRegistrieren) {
-					User.createUser(tfNachname.getText(), tfName.getText(), new Date().getTime(), tfPasswort.getText());
-					
-					frame.dispose();
-					new LoginScreen();
+					if(Geteilte_Einkaufsliste.getMySQL().benutzerNameExists(tfBenutzerName.getText())) {
+						tfBenutzerName.setBackground(PrettyColor.RED);
+						JOptionPane.showMessageDialog(cp, "Der Benutzername ist leider schon vergeben.", "Benutzername", JOptionPane.OK_OPTION);
+					}else {
+						User.createUser(tfBenutzerName.getText(), tfNachname.getText(), tfName.getText(), new Date().getTime(), tfPasswort.getText());
+						frame.dispose();
+						new LoginScreen();
+					}
 				}
 			}
 		});

@@ -59,7 +59,7 @@ public class LoginScreen {
 	    cp.add(lblueberschrift);
 	    
 	    lblUserID.setBounds((int)((frameWidth/2)-(100*1.5)), (lblueberschrift.getBounds().y+lblueberschrift.getBounds().height+abstand), 100, 20);
-	    lblUserID.setText("UserID:");
+	    lblUserID.setText("Benutzername:");
 	    lblUserID.setFont(Utils.NormalFont);
 	    lblUserID.setForeground(PrettyColor.GREEN);
 	    cp.add(lblUserID);
@@ -68,7 +68,6 @@ public class LoginScreen {
 	    useridfield.setText("");
 	    useridfield.setBorder(BorderFactory.createEmptyBorder());
 	    useridfield.setBackground(PrettyColor.LITHEBLUE);
-	    useridfield.setForeground(PrettyColor.WHITE);
 	    useridfield.setToolTipText("Bitte nur Zahlen eingeben");
 	    cp.add(useridfield);
 	   
@@ -80,6 +79,7 @@ public class LoginScreen {
 
 	    pwfield.setBorder(BorderFactory.createEmptyBorder());
 	    pwfield.setBackground(PrettyColor.LITHEBLUE);
+	    pwfield.setForeground(PrettyColor.WHITE);
 	    pwfield.setBounds((int)((frameWidth/2)-(25*1.5)), (useridfield.getBounds().y+useridfield.getBounds().height+abstand), 150, 20);
 	    cp.add(pwfield);
 	    

@@ -62,8 +62,8 @@ public class MySQL {
 			Statement st = con.createStatement();
 			if(Utils.debug)
 				System.out.println("Versuche Tabels anzulegen");
-		
-			st.executeUpdate("CREATE TABLE IF NOT EXISTS User(ID int NOT NULL AUTO_INCREMENT, Name VARCHAR(50), Vorname VARCHAR(50), Geburtsdatum Long, Password VARCHAR(50), PRIMARY KEY(ID))");
+			
+			st.executeUpdate("CREATE TABLE IF NOT EXISTS User(ID int NOT NULL AUTO_INCREMENT, Benutzername VARCHAR(50), Name VARCHAR(50), Vorname VARCHAR(50), Geburtsdatum Long, Password VARCHAR(50), PRIMARY KEY(ID))");
 			st.executeUpdate("CREATE TABLE IF NOT EXISTS U_IN_G(UserID int NOT NULL, GruppenID int NOT NULL)");
 //			st.executeUpdate("CREATE TABLE IF NOT EXISTS Gruppe(GruppenID int NOT NULL AUTO_INCREMENT, Name VARCHAR(50), PRIMARY KEY(ID))");
 
@@ -112,13 +112,28 @@ public class MySQL {
 			return false;
 		}
 	}
+	public boolean benutzerNameExists(String benutzername) {
+		ResultSet rs = getResult("SELECT * FROM User WHERE Benutzername='"+benutzername+"'");
+		try {
+			if(rs.next()) {
+				return true;
+			}else {
+				return false;
+			}
+		} catch (SQLException e) {
+			if(Utils.debug)
+				e.printStackTrace();
+			
+			return false;
+		}
+	}
 	
 	public void listIDS() {
 		ResultSet rs = getResult("SELECT * FROM User");
 		try {
 			System.out.println("-------- User ---------");
 			while (rs.next()) {
-				System.out.println(""+rs.getInt("ID")+" -> Name: "+ rs.getString("Name")+" Vorname: "+ rs.getString("Vorname"));
+				System.out.println(""+rs.getInt("ID")+" -> "+rs.getString("Benutzername")+" | -> Name: "+ rs.getString("Name")+" Vorname: "+ rs.getString("Vorname"));
 				
 			}
 			System.out.println("-------- User ---------");
