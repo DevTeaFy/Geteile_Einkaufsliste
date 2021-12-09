@@ -8,26 +8,30 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
+import java.util.Properties;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.text.MaskFormatter;
 
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
+
 import de.ge.main.Geteilte_Einkaufsliste;
 import de.ge.user.User;
 import de.ge.utils.PrettyColor;
+import de.ge.utils.Utils;
 
 public class RegisterScreen {
+	
 	private JFrame frame = new JFrame();
-
 	private JLabel lblBenutzerName = new JLabel();
 	private JTextField tfBenutzerName = new JTextField();
 	private JLabel lblName = new JLabel();
@@ -41,7 +45,7 @@ public class RegisterScreen {
 	private JLabel lblRegestrierung = new JLabel();
 	private JButton btnRegistrieren = new JButton();
 	private MaskFormatter jFormattedTextField1MaskFormatter = new MaskFormatter();
-	private JFormattedTextField ftfGeburtsdatum = new JFormattedTextField(jFormattedTextField1MaskFormatter);
+	private JDatePickerImpl datepickerGeburtsdatum;
 	private JLabel lblGeburtsdatum = new JLabel();
 
 	public RegisterScreen() {
@@ -86,6 +90,7 @@ public class RegisterScreen {
 		tfBenutzerName.setBackground(PrettyColor.LITHEBLUE);
 		tfBenutzerName.setForeground(PrettyColor.WHITE);
 		tfBenutzerName.setBorder(BorderFactory.createEmptyBorder());
+		tfBenutzerName.addFocusListener(new FeldFoucosListener(this));
 		cp.add(tfBenutzerName);
 		
 		
@@ -102,6 +107,7 @@ public class RegisterScreen {
 		tfName.setText("");
 		tfName.setBackground(PrettyColor.LITHEBLUE);
 		tfName.setForeground(PrettyColor.WHITE);
+		tfName.addFocusListener(new FeldFoucosListener(this));
 		tfName.setBorder(BorderFactory.createEmptyBorder());
 		cp.add(tfName);
 		
@@ -117,6 +123,7 @@ public class RegisterScreen {
 		tfNachname.setBorder(BorderFactory.createEmptyBorder());
 		tfNachname.setBackground(PrettyColor.LITHEBLUE);
 		tfNachname.setForeground(PrettyColor.WHITE);
+		tfNachname.addFocusListener(new FeldFoucosListener(this));
 		cp.add(tfNachname);
 		
 		
@@ -127,14 +134,26 @@ public class RegisterScreen {
 		lblGeburtsdatum.setFont(new Font("Comic Sans MS", Font.BOLD, 16));
 		lblGeburtsdatum.setForeground(PrettyColor.GREEN);
 		cp.add(lblGeburtsdatum);
+
+		UtilDateModel model = new UtilDateModel();
+		Properties p = new Properties();
+		p.put("text.today", "Heute");
+		p.put("text.month", "Month");
+		p.put("text.year", "Year");
+		JDatePanelImpl datePanel = new JDatePanelImpl(model,p);
+		this.datepickerGeburtsdatum = new JDatePickerImpl(datePanel, new DateLabelFormatter());
+		this.datepickerGeburtsdatum.setBounds((int)((frameWidth/2)-(160/2)), (lblGeburtsdatum.getBounds().y+lblGeburtsdatum.getBounds().height+(abstand)), 160, 30);
+		this.datepickerGeburtsdatum.setBorder(BorderFactory.createEmptyBorder());
+		cp.add(datepickerGeburtsdatum);
 		
-		ftfGeburtsdatum.setBounds((int)((frameWidth/2)-(150/2)), (lblGeburtsdatum.getBounds().y+lblGeburtsdatum.getBounds().height+(abstand/2)), 150, 20);
-		ftfGeburtsdatum.setBorder(BorderFactory.createEmptyBorder());
-		ftfGeburtsdatum.setBackground(PrettyColor.LITHEBLUE);
-		ftfGeburtsdatum.setForeground(PrettyColor.WHITE);
-		cp.add(ftfGeburtsdatum);
 		
-		lblPasswort.setBounds((int)((frameWidth/2)-(110/2)), (ftfGeburtsdatum.getBounds().y+ftfGeburtsdatum.getBounds().height+(abstand)), 110, 30);
+//		ftfGeburtsdatum.setBounds((int)((frameWidth/2)-(150/2)), (lblGeburtsdatum.getBounds().y+lblGeburtsdatum.getBounds().height+(abstand/2)), 150, 20);
+//		ftfGeburtsdatum.setBorder(BorderFactory.createEmptyBorder());
+//		ftfGeburtsdatum.setBackground(PrettyColor.LITHEBLUE);
+//		ftfGeburtsdatum.setForeground(PrettyColor.WHITE);
+//		cp.add(ftfGeburtsdatum);
+		
+		lblPasswort.setBounds((int)((frameWidth/2)-(110/2)), (datepickerGeburtsdatum.getBounds().y+datepickerGeburtsdatum.getBounds().height+(abstand)), 110, 30);
 		lblPasswort.setText("Passwort:");
 		lblPasswort.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPasswort.setFont(new Font("Comic Sans MS", Font.BOLD, 16));
@@ -145,6 +164,7 @@ public class RegisterScreen {
 		tfPasswort.setBorder(BorderFactory.createEmptyBorder());
 		tfPasswort.setBackground(PrettyColor.LITHEBLUE);
 		tfPasswort.setForeground(PrettyColor.WHITE);
+		tfPasswort.addFocusListener(new FeldFoucosListener(this));
 		cp.add(tfPasswort);
 		
 		lblPasswortwiederholen.setBounds((int)((frameWidth/2)-(175/2)), (tfPasswort.getBounds().y+tfPasswort.getBounds().height+(abstand)), 175, 30);
@@ -158,6 +178,7 @@ public class RegisterScreen {
 		tfPasswortw.setBorder(BorderFactory.createEmptyBorder());
 		tfPasswortw.setBackground(PrettyColor.LITHEBLUE);
 		tfPasswortw.setForeground(PrettyColor.WHITE);
+		tfPasswortw.addFocusListener(new FeldFoucosListener(this));
 		cp.add(tfPasswortw);
 		
 		btnRegistrieren.setBounds((int)((frameWidth/2)-(130/2)), (tfPasswortw.getBounds().y+tfPasswortw.getBounds().height+(abstand)), 130, 40);
@@ -171,18 +192,55 @@ public class RegisterScreen {
 		btnRegistrieren.setBackground(PrettyColor.BLUE);
 		btnRegistrieren.addActionListener(new ActionListener() {
 			
+			
 			@SuppressWarnings("deprecation")
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				boolean runokay = true;
 				if(e.getSource() == btnRegistrieren) {
+					if(tfBenutzerName.getText().isEmpty()) {
+						tfBenutzerName.setBackground(PrettyColor.RED);
+						runokay = false;
+					}
+					if(tfName.getText().isEmpty()) {
+						tfName.setBackground(PrettyColor.RED);
+						runokay = false;
+					}
+					if(tfNachname.getText().isEmpty()) {
+						tfNachname.setBackground(PrettyColor.RED);
+						runokay = false;
+					}
+					if(tfPasswort.getText().isEmpty()) {
+						tfPasswort.setBackground(PrettyColor.RED);
+						runokay = false;
+					}
+					if(tfPasswortw.getText().isEmpty()) {
+						tfPasswortw.setBackground(PrettyColor.RED);
+						runokay = false;
+					}
+					
+					if(!tfPasswort.getText().equals(tfPasswortw.getText())) {
+						tfPasswortw.setBackground(PrettyColor.RED);
+						runokay = false;
+						return;
+					}
+					if(!runokay) {
+						return;
+					}
+					
 					if(Geteilte_Einkaufsliste.getMySQL().benutzerNameExists(tfBenutzerName.getText())) {
 						tfBenutzerName.setBackground(PrettyColor.RED);
-						JOptionPane.showMessageDialog(cp, "Der Benutzername ist leider schon vergeben.", "Benutzername", JOptionPane.OK_OPTION);
+						if(Utils.debug)System.out.println("Der Benutzername: "+tfBenutzerName.getText()+" ist Vergeben!");
+						return;
 					}else {
+						tfBenutzerName.setBackground(PrettyColor.LITHEBLUE);
 						User.createUser(tfBenutzerName.getText(), tfNachname.getText(), tfName.getText(), new Date().getTime(), tfPasswort.getText());
 						frame.dispose();
-						new LoginScreen();
+						new LoginScreen(tfBenutzerName.getText());
 					}
+					
+					
+					
 				}
 			}
 		});
@@ -191,6 +249,72 @@ public class RegisterScreen {
 		
 
 		this.frame.setVisible(true);
+	}
+
+	
+	
+	public JFrame getFrame() {
+		return frame;
+	}
+
+	public JLabel getLblBenutzerName() {
+		return lblBenutzerName;
+	}
+
+	public JTextField getTfBenutzerName() {
+		return tfBenutzerName;
+	}
+
+	public JLabel getLblName() {
+		return lblName;
+	}
+
+	public JTextField getTfName() {
+		return tfName;
+	}
+
+	public JLabel getLblNachname() {
+		return lblNachname;
+	}
+
+	public JTextField getTfNachname() {
+		return tfNachname;
+	}
+
+	public JPasswordField getTfPasswort() {
+		return tfPasswort;
+	}
+
+	public JPasswordField getTfPasswortw() {
+		return tfPasswortw;
+	}
+
+	public JLabel getLblPasswort() {
+		return lblPasswort;
+	}
+
+	public JLabel getLblPasswortwiederholen() {
+		return lblPasswortwiederholen;
+	}
+
+	public JLabel getLblRegestrierung() {
+		return lblRegestrierung;
+	}
+
+	public JButton getBtnRegistrieren() {
+		return btnRegistrieren;
+	}
+
+	public MaskFormatter getjFormattedTextField1MaskFormatter() {
+		return jFormattedTextField1MaskFormatter;
+	}
+
+	public JDatePickerImpl getFtfGeburtsdatum() {
+		return datepickerGeburtsdatum;
+	}
+
+	public JLabel getLblGeburtsdatum() {
+		return lblGeburtsdatum;
 	}
 
 }

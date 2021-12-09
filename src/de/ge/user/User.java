@@ -36,7 +36,6 @@ public class User {
 				System.out.println("First Try Neue ID");
 			}
 			mysql.update("INSERT INTO User(ID,Benutzername,Name,Vorname,Geburtsdatum,Password) VALUES ("+id+",'"+Benutzername+"','"+name+"','"+vorname+"','"+geburtsdatum+"','"+pw+"')");
-			
 		}else {
 			do {
 				do {

@@ -32,9 +32,18 @@ public class LoginScreen {
 	private JButton btnRegistrieren = new JButton();
 	private JLabel lblueberschrift = new JLabel();
 	private JTextField useridfield = new JTextField();
+	
+	public LoginScreen(String benutzername) {
+		createScreen();
+		useridfield.setText(benutzername);
+	}
 
 	public LoginScreen() { 
-	    this.frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		createScreen();
+	}
+	
+	private void createScreen() {
+		this.frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	    this.frame.addWindowListener(new CloseWindowListener());
 	    int frameWidth = 400; 
 	    int frameHeight = 250;
@@ -154,7 +163,7 @@ public class LoginScreen {
 	    
 	    
 	    this.frame.setVisible(true);
-	  }
+	}
 	
 	public JFrame getFrame() {
 		return frame;
