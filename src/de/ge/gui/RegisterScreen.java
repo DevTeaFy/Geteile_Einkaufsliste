@@ -234,7 +234,7 @@ public class RegisterScreen {
 						return;
 					}else {
 						tfBenutzerName.setBackground(PrettyColor.LITHEBLUE);
-						User.createUser(tfBenutzerName.getText(), tfNachname.getText(), tfName.getText(), new Date().getTime(), tfPasswort.getText());
+						User.createUser(tfBenutzerName.getText(), tfNachname.getText(), tfName.getText(), ((Date)datepickerGeburtsdatum.getJDateInstantPanel().getModel().getValue()).getTime(), tfPasswort.getText());
 						frame.dispose();
 						new LoginScreen(tfBenutzerName.getText());
 					}

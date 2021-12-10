@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Date;
 
 import de.ge.utils.Tabellen;
 import de.ge.utils.Utils;
@@ -132,7 +133,7 @@ public class MySQL {
 		try {
 			System.out.println("-------- User ---------");
 			while (rs.next()) {
-				System.out.println(""+rs.getInt("ID")+" -> "+rs.getString("Benutzername")+" | -> Name: "+ rs.getString("Name")+" Vorname: "+ rs.getString("Vorname"));
+				System.out.println(""+rs.getInt("ID")+" -> "+rs.getString("Benutzername")+" "+String.valueOf(new Date(rs.getLong("Geburtsdatum")).toLocaleString())+"| -> Name: "+ rs.getString("Name")+" Vorname: "+ rs.getString("Vorname"));
 				
 			}
 			System.out.println("-------- User ---------");
