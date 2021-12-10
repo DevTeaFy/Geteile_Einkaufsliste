@@ -96,6 +96,24 @@ public class MySQL {
 		}
 	}
 	
+	public int getInt(String Werte,Tabellen Tabelle,String Seletion,String Value,String Typ) {
+		
+		try {
+			ResultSet rs = getResult("SELECT "+Werte+" FROM "+Tabelle.getName()+" WHERE "+Seletion+"='"+Value+"'");
+			if(rs.next()) {
+			int toreturn = rs.getInt(Typ);
+			return toreturn;
+			}else {
+				return -1;
+			}
+		} catch (SQLException e) {
+			if(Utils.debug)
+				e.printStackTrace();
+			
+			return -1;
+		}
+	}
+	
 	
 	public boolean userIDExists(int ID) {
 		ResultSet rs = getResult("SELECT * FROM User WHERE ID="+ID);

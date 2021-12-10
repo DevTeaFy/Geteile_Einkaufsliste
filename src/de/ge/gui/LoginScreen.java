@@ -18,6 +18,7 @@ import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
 import de.ge.main.Geteilte_Einkaufsliste;
+import de.ge.user.User;
 import de.ge.utils.PrettyColor;
 import de.ge.utils.Tabellen;
 import de.ge.utils.Utils;
@@ -126,7 +127,9 @@ public class LoginScreen {
 					String datenbankpw = Geteilte_Einkaufsliste.getMySQL().getString("*", Tabellen.USER, "Benutzername", useridfield.getText(), "Password");
 					
 					if(pw.equals(datenbankpw)) {
+						Geteilte_Einkaufsliste.setUser(new User(useridfield.getText(), datenbankpw));
 						System.out.println("Login erfolgreich");
+						System.out.println(Geteilte_Einkaufsliste.getUser().getVorname());
 					}else {
 						System.out.println("Pw falsch!!!");
 					}
