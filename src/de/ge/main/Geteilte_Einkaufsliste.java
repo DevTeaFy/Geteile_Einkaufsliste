@@ -13,10 +13,10 @@ public class Geteilte_Einkaufsliste {
 		new LoginScreen();
 		mySQL = new MySQL();
 		mySQL.setDatabase("");
-		mySQL.setHost("");
-		mySQL.setPort("");
-		mySQL.setUsername("");
-		mySQL.setPassword("");
+        mySQL.setHost("");
+        mySQL.setPort("");
+        mySQL.setUsername("");
+        mySQL.setPassword("");
 	}
 
 	public static MySQL getMySQL() {

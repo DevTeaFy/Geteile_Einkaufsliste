@@ -44,6 +44,7 @@ public class RegisterScreen {
 	private JLabel lblPasswortwiederholen = new JLabel();
 	private JLabel lblRegestrierung = new JLabel();
 	private JButton btnRegistrieren = new JButton();
+	private JButton btnZurück = new JButton();
 	private MaskFormatter jFormattedTextField1MaskFormatter = new MaskFormatter();
 	private JDatePickerImpl datepickerGeburtsdatum;
 	private JLabel lblGeburtsdatum = new JLabel();
@@ -181,6 +182,8 @@ public class RegisterScreen {
 		tfPasswortw.addFocusListener(new FeldFoucosListener(this));
 		cp.add(tfPasswortw);
 		
+		
+		
 		btnRegistrieren.setBounds((int)((frameWidth/2)-(130/2)), (tfPasswortw.getBounds().y+tfPasswortw.getBounds().height+(abstand)), 130, 40);
 		btnRegistrieren.setText("Registrieren");
 		btnRegistrieren.setMargin(new Insets(2, 2, 2, 2));
@@ -192,6 +195,7 @@ public class RegisterScreen {
 		btnRegistrieren.setBackground(PrettyColor.BLUE);
 		btnRegistrieren.addActionListener(new ActionListener() {
 			
+		
 			
 			@SuppressWarnings("deprecation")
 			@Override
@@ -245,11 +249,28 @@ public class RegisterScreen {
 			}
 		});
 		cp.add(btnRegistrieren);
+		
+		btnZurück.setBounds((int) ((int)((frameWidth/2)-(115/2))+btnRegistrieren.getBounds().getX()), (lblPasswortwiederholen.getBounds().y+lblPasswortwiederholen.getBounds().height+(abstand)), 115, 33);
+		btnZurück.setText("Zurück");
+		btnZurück.setMargin(new Insets(2, 2, 2, 2));
+		btnZurück.addActionListener(new ActionListener() {
 
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				frame.dispose();
+				new LoginScreen();
+			}
+		
+		});
+		btnZurück.setBackground(PrettyColor.LITHEBLUE);
+		btnZurück.setForeground(PrettyColor.WHITE);
+		btnZurück.setFont(new Font("Comic Sans MS", Font.BOLD, 14));
+		cp.add(btnZurück);
 		
 
 		this.frame.setVisible(true);
 	}
+	
 
 	
 	
