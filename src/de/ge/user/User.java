@@ -1,11 +1,19 @@
 package de.ge.user;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Random;
+
+import com.mysql.cj.xdevapi.PreparableStatement;
 
 import de.ge.main.Geteilte_Einkaufsliste;
 import de.ge.mysql.MySQL;
 import de.ge.utils.Tabellen;
 import de.ge.utils.Utils;
+import de.ge.utils.Wert;
 
 public class User {
 	
@@ -23,17 +31,69 @@ public class User {
 	}
 	
 	public User login(String benutzername, String pw) {
-		String datenbankpw = Geteilte_Einkaufsliste.getMySQL().getString("*", Tabellen.USER, "Benutzername", benutzername, "Password");
+		String datenbankpw = mysql.getString("*", Tabellen.User, Wert.Benutzername, benutzername, Wert.Password);
 		if(pw.equals(datenbankpw)) {
-			this.iD = mysql.getInt("*", Tabellen.USER, "Benutzername", benutzername, "ID");
-			this.Nachname = mysql.getString("*", Tabellen.USER, "Benutzername", benutzername, "Name");
-			this.vorname = mysql.getString("*", Tabellen.USER, "Benutzername", benutzername, "Vorname");
+			this.iD = mysql.getInt("*", Tabellen.User, Wert.Benutzername, benutzername, Wert.UserID);
+			this.Nachname = mysql.getString("*", Tabellen.User, Wert.Benutzername, benutzername, Wert.Nachname);
+			this.vorname = mysql.getString("*", Tabellen.User, Wert.Benutzername, benutzername, Wert.Vorname);
 			this.passwort = pw;
 			this.Benutzername = benutzername;
 			return this;
 		}else {
 			System.out.println("Pw falsch!!!");
 			return null;
+		}
+	}
+	
+	public ArrayList<String> getListenname(){
+		ArrayList<Integer> idliste = new ArrayList<>();
+		ArrayList<String> nameliste = new ArrayList<>();
+		try {
+			ResultSet rs = mysql.getResult("SELECT * FROM "+Tabellen.User_hat_listen.getName()+" WHERE "+Wert.UserID.getName()+"="+this.iD);
+			while (rs.next()) {
+				idliste.add(rs.getInt(Wert.ListenID.getName()));
+			}
+			for (int i = 0; i < idliste.size(); i++) {
+				nameliste.add(mysql.getString("*", Tabellen.Einkaufslisten, Wert.ListenID, idliste.get(i), Wert.Listenname));
+			}
+			return nameliste;
+		} catch (SQLException e) {
+			if(Utils.debug)
+				e.printStackTrace();
+			
+			return null;
+		}
+		
+		
+	}
+	
+	
+	public boolean hasListname(String listenname) {
+		ResultSet rs = mysql.getResult("SELECT * FROM Einkaufslisten WHERE "+Wert.Listenname.getName()+"="+listenname+" AND UserID="+this.iD);
+		try {
+			if(rs.next()) {
+				return true;
+			}else {
+				return false;
+			}
+		} catch (SQLException e) {
+			if(Utils.debug)
+				e.printStackTrace();
+			return false;
+		}
+		
+	}
+	
+	public void createEinkaufsliste(String Listenname) {
+		try {
+			Statement st = mysql.getCon().createStatement();
+			st.executeUpdate("INSERT INTO Einkaufslisten(ListenID, GruppenID, UserID, Listenname) VALUES (Null,-1,"+this.iD+","+Listenname+")");
+			
+			int lastid = mysql.getInt("*", Tabellen.Einkaufslisten, Wert.Listenname, Listenname, Wert.ListenID);
+			st.executeUpdate("INSERT INTO "+Tabellen.User_hat_listen.getName()+"(UserID, ListenID) VALUES ("+this.iD+","+lastid+")");
+		} catch (SQLException e) {
+			if(Utils.debug)
+				e.printStackTrace();
 		}
 	}
 	
@@ -48,7 +108,7 @@ public class User {
 			if(Utils.debug) {
 				System.out.println("First Try Neue ID");
 			}
-			mysql.update("INSERT INTO User(ID,Benutzername,Name,Vorname,Geburtsdatum,Password) VALUES ("+id+",'"+Benutzername+"','"+name+"','"+vorname+"','"+geburtsdatum+"','"+pw+"')");
+			mysql.update("INSERT INTO User(UserID,Benutzername,Nachname,Vorname,Geburtsdatum,Password) VALUES ("+id+",'"+Benutzername+"','"+name+"','"+vorname+"','"+geburtsdatum+"','"+pw+"')");
 		}else {
 			do {
 				do {
@@ -58,7 +118,7 @@ public class User {
 			if(Utils.debug) {
 				System.out.println("Secound Try Neue ID");
 			}
-			mysql.update("INSERT INTO User(ID,Benutzername,Name,Vorname,Geburtsdatum,Password) VALUES ("+id+",'"+Benutzername+"','"+name+"','"+vorname+"','"+geburtsdatum+"','"+pw+"')");
+			mysql.update("INSERT INTO User(UserID,Benutzername,Nachname,Vorname,Geburtsdatum,Password) VALUES ("+id+",'"+Benutzername+"','"+name+"','"+vorname+"','"+geburtsdatum+"','"+pw+"')");
 			
 		}
 		mysql.listIDS();

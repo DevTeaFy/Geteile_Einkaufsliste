@@ -10,6 +10,7 @@ import java.util.Date;
 
 import de.ge.utils.Tabellen;
 import de.ge.utils.Utils;
+import de.ge.utils.Wert;
 
 public class MySQL {
 	
@@ -63,10 +64,23 @@ public class MySQL {
 			Statement st = con.createStatement();
 			if(Utils.debug)
 				System.out.println("Versuche Tabels anzulegen");
-			st.executeUpdate("CREATE TABLE IF NOT EXISTS User(ID int NOT NULL AUTO_INCREMENT, Benutzername VARCHAR(50), Name VARCHAR(50), Vorname VARCHAR(50), Geburtsdatum Long, Password VARCHAR(50), PRIMARY KEY(ID), UNIQUE (Benutzername))");
-			st.executeUpdate("CREATE TABLE IF NOT EXISTS U_IN_G(UserID int NOT NULL, GruppenID int NOT NULL)");
-//			st.executeUpdate("CREATE TABLE IF NOT EXISTS Gruppe(GruppenID int NOT NULL AUTO_INCREMENT, Name VARCHAR(50), PRIMARY KEY(ID))");
-
+//			st.executeUpdate("DROP TABLE IF EXISTS Listen_Inhalte");
+//			st.executeUpdate("DROP TABLE IF EXISTS U_IN_G");
+//			st.executeUpdate("DROP TABLE IF EXISTS User_hat_listen");
+//			st.executeUpdate("DROP TABLE IF EXISTS Gruppe_hat_listen");
+//			st.executeUpdate("DROP TABLE IF EXISTS Einkaufslisten");
+//			st.executeUpdate("DROP TABLE IF EXISTS Atikel");
+//			st.executeUpdate("DROP TABLE IF EXISTS User");
+//			st.executeUpdate("DROP TABLE IF EXISTS Gruppen");
+			
+			st.executeUpdate("CREATE TABLE IF NOT EXISTS User(UserID int UNIQUE NOT NULL AUTO_INCREMENT, Benutzername VARCHAR(50), Nachname VARCHAR(50), Vorname VARCHAR(50), Geburtsdatum Long, Password VARCHAR(50), PRIMARY KEY(UserID), UNIQUE (Benutzername))");
+			st.executeUpdate("CREATE TABLE IF NOT EXISTS Gruppen(GruppenID int NOT NULL AUTO_INCREMENT, GruppenName VARCHAR(50), PRIMARY KEY(GruppenID))");
+			st.executeUpdate("CREATE TABLE IF NOT EXISTS U_IN_G(UserID int NOT NULL, GruppenID int NOT NULL, FOREIGN KEY (UserID) REFERENCES User (UserID), FOREIGN KEY (GruppenID) REFERENCES Gruppen (GruppenID),PRIMARY KEY (UserID,GruppenID))");
+			st.executeUpdate("CREATE TABLE IF NOT EXISTS Einkaufslisten(ListenID int NOT NULL AUTO_INCREMENT, GruppenID int NOT NULL, UserID int NOT NULL, Listenname VARCHAR(50),PRIMARY KEY (ListenID))");
+			st.executeUpdate("CREATE TABLE IF NOT EXISTS User_hat_listen(UserID integer NOT NULL,ListenID integer NOT NULL, FOREIGN KEY (UserID) REFERENCES User (UserID), FOREIGN KEY (ListenID) REFERENCES Einkaufslisten (ListenID),PRIMARY KEY (UserID,ListenID))");
+			st.executeUpdate("CREATE TABLE IF NOT EXISTS Gruppe_hat_listen(GruppenID integer NOT NULL,ListenID integer NOT NULL,FOREIGN KEY (GruppenID) REFERENCES Gruppen (GruppenID),FOREIGN KEY (ListenID) REFERENCES Einkaufslisten (ListenID),PRIMARY KEY (GruppenID,ListenID))");
+			st.executeUpdate("CREATE TABLE IF NOT EXISTS Atikel(ArtikelID integer NOT NULL,ArtikelName varchar(50),Bezeichnung varchar(50),Link varchar(50),Typ varchar(50),PRIMARY KEY (ArtikelID))");
+			st.executeUpdate("CREATE TABLE IF NOT EXISTS Listen_Inhalte(ListenID integer NOT NULL,ArtikelID integer NOT NULL, Menge integer NOT NULL, FOREIGN KEY (ListenID) REFERENCES Einkaufslisten (ListenID), FOREIGN KEY (ArtikelID) REFERENCES Atikel (ArtikelID), PRIMARY KEY (ListenID,ArtikelID))");
 			if(Utils.debug)
 				System.out.println("Tabels erfolgreich angelegt oder noch existent");
 		} catch (SQLException e) {
@@ -78,12 +92,11 @@ public class MySQL {
 	}
 	
 	
-	public String getString(String Werte,Tabellen Tabelle,String Seletion,String Value,String Typ) {
-		
+	public String getString(String SelectWerte,Tabellen Tabelle,Wert Where,Object Value,Wert rueckgabewert) {
 		try {
-			ResultSet rs = getResult("SELECT "+Werte+" FROM "+Tabelle.getName()+" WHERE "+Seletion+"='"+Value+"'");
+			ResultSet rs = getResult("SELECT "+SelectWerte+" FROM "+Tabelle.getName()+" WHERE "+Where.getName()+"='"+Value+"'");
 			if(rs.next()) {
-			String toreturn = rs.getString(Typ);
+			String toreturn = rs.getString(rueckgabewert.getName());
 			return toreturn;
 			}else {
 				return "ERRORRRR";
@@ -91,17 +104,15 @@ public class MySQL {
 		} catch (SQLException e) {
 			if(Utils.debug)
 				e.printStackTrace();
-			
 			return "Error (WTF)";
 		}
 	}
 	
-	public int getInt(String Werte,Tabellen Tabelle,String Seletion,String Value,String Typ) {
-		
+	public int getInt(String SelectWerte,Tabellen Tabelle,Wert Where,Object Value,Wert rueckgabewert) {
 		try {
-			ResultSet rs = getResult("SELECT "+Werte+" FROM "+Tabelle.getName()+" WHERE "+Seletion+"='"+Value+"'");
+			ResultSet rs = getResult("SELECT "+SelectWerte+" FROM "+Tabelle.getName()+" WHERE "+Where.getName()+"='"+Value+"'");
 			if(rs.next()) {
-			int toreturn = rs.getInt(Typ);
+			int toreturn = rs.getInt(rueckgabewert.getName());
 			return toreturn;
 			}else {
 				return -1;
@@ -115,8 +126,32 @@ public class MySQL {
 	}
 	
 	
+	
+	public void setString(Tabellen Tabelle,Wert setwert,Object setvalue,Wert Where,Object Value) {
+		try {
+			Statement st = con.createStatement();
+			st.executeUpdate("UPDATE "+Tabelle.getName()+" SET "+setwert.getName()+"='"+setvalue+"' WHERE "+Where.getName()+"='"+Value+"'");
+		} catch (SQLException e) {
+			if(Utils.debug)
+				e.printStackTrace();
+		}
+	}
+	
+	public void setInt(Tabellen Tabelle,Wert setwert,Object setvalue,Wert Where,Object Value) {
+		try {
+			Statement st = con.createStatement();
+			st.executeUpdate("UPDATE "+Tabelle.getName()+" SET "+setwert.getName()+"="+setvalue+" WHERE "+Where.getName()+"="+Value);
+		} catch (SQLException e) {
+			if(Utils.debug)
+				e.printStackTrace();
+		}
+	}
+	
+	
+	
+	
 	public boolean userIDExists(int ID) {
-		ResultSet rs = getResult("SELECT * FROM User WHERE ID="+ID);
+		ResultSet rs = getResult("SELECT * FROM User WHERE "+Wert.UserID.getName()+"="+ID);
 		try {
 			if(rs.next()) {
 				return true;
@@ -126,12 +161,11 @@ public class MySQL {
 		} catch (SQLException e) {
 			if(Utils.debug)
 				e.printStackTrace();
-			
 			return false;
 		}
 	}
 	public boolean benutzerNameExists(String benutzername) {
-		ResultSet rs = getResult("SELECT * FROM User WHERE Benutzername='"+benutzername+"'");
+		ResultSet rs = getResult("SELECT * FROM User WHERE "+Wert.Benutzername.getName()+"='"+benutzername+"'");
 		try {
 			if(rs.next()) {
 				return true;
@@ -146,12 +180,13 @@ public class MySQL {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void listIDS() {
 		ResultSet rs = getResult("SELECT * FROM User");
 		try {
 			System.out.println("-------- User ---------");
 			while (rs.next()) {
-				System.out.println(""+rs.getInt("ID")+" -> "+rs.getString("Benutzername")+" "+String.valueOf(new Date(rs.getLong("Geburtsdatum")).toLocaleString())+"| -> Name: "+ rs.getString("Name")+" Vorname: "+ rs.getString("Vorname"));
+				System.out.println(""+rs.getInt("UserID")+" -> "+rs.getString("Benutzername")+" "+String.valueOf(new Date(rs.getLong("Geburtsdatum")).toLocaleString())+"| -> Nachname: "+ rs.getString("Nachname")+" Vorname: "+ rs.getString("Vorname"));
 				
 			}
 			System.out.println("-------- User ---------");

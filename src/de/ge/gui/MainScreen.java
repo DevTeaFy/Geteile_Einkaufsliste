@@ -7,6 +7,8 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -21,7 +23,11 @@ import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 
 import de.ge.main.Geteilte_Einkaufsliste;
+import de.ge.mysql.MySQL;
+import de.ge.user.User;
 import de.ge.utils.PrettyColor;
+import de.ge.utils.Tabellen;
+import de.ge.utils.Wert;
 
 public class MainScreen {
 
@@ -40,6 +46,8 @@ public class MainScreen {
 	private JScrollPane jTable1ScrollPane = new JScrollPane(jTable1);
 	private JButton btnOefnnen = new JButton();
 	private JButton btnZurück = new JButton();
+	private User u = Geteilte_Einkaufsliste.getUser();
+	private MySQL mysql = Geteilte_Einkaufsliste.getMySQL();
 
 	@SuppressWarnings("unchecked")
 	public MainScreen() {
@@ -80,6 +88,11 @@ public class MainScreen {
 		btnListeerstellen.setForeground(PrettyColor.WHITE);
 		btnListeerstellen.setFont(new Font("Comic Sans MS", Font.BOLD, 14));
 		cp.add(btnListeerstellen);
+		
+		ArrayList<String> listen = u.getListenname();
+		for (int i = 0; i < listen.size(); i++) {
+			listModel.add(i, listen.get(i));
+		}
 		lListen.setModel(listModel);
 		lListenScrollPane.setBounds(0, 80, 246, 340);
 		lListen.setFont(new Font("Comic Sans MS", Font.BOLD, 24));
@@ -197,7 +210,11 @@ public class MainScreen {
 
 	public void btnListeerstellen_ActionPerformed(ActionEvent e) {
 		if (e.getSource() == btnListeerstellen) {
-			listModel.addElement(tfListenName.getText());
+			String listenname = tfListenName.getText();
+			if(!u.hasListname(listenname)) {
+				u.createEinkaufsliste(listenname);
+				listModel.addElement(listenname);
+			}
 		}
 	}
 

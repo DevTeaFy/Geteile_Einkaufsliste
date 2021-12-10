@@ -22,6 +22,7 @@ import de.ge.user.User;
 import de.ge.utils.PrettyColor;
 import de.ge.utils.Tabellen;
 import de.ge.utils.Utils;
+import de.ge.utils.Wert;
 
 public class LoginScreen {
 
@@ -124,7 +125,7 @@ public class LoginScreen {
 						return;
 					}
 					String pw = pwfield.getText();
-					String datenbankpw = Geteilte_Einkaufsliste.getMySQL().getString("*", Tabellen.USER, "Benutzername", useridfield.getText(), "Password");
+					String datenbankpw = Geteilte_Einkaufsliste.getMySQL().getString("*", Tabellen.User, Wert.Benutzername, useridfield.getText(), Wert.Password);
 					
 					if(pw.equals(datenbankpw)) {
 						Geteilte_Einkaufsliste.setUser(new User(useridfield.getText(), datenbankpw));
