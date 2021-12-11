@@ -1,13 +1,10 @@
 package de.ge.user;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Random;
-
-import com.mysql.cj.xdevapi.PreparableStatement;
 
 import de.ge.main.Geteilte_Einkaufsliste;
 import de.ge.mysql.MySQL;
@@ -69,7 +66,14 @@ public class User {
 	
 	
 	public boolean hasListname(String listenname) {
-		ResultSet rs = mysql.getResult("SELECT * FROM Einkaufslisten WHERE "+Wert.Listenname.getName()+"="+listenname+" AND UserID="+this.iD);
+		listenname = listenname.replace("\'", "\\\\"+"\'");
+		listenname = listenname.replace("\"", "\\"+"\"");
+		listenname = listenname.replace("[", "\\"+"[");
+		listenname = listenname.replace("]", "\\"+"]");
+		listenname = listenname.replace("(", "\\"+"(");
+		listenname = listenname.replace(")", "\\"+")");
+		listenname = listenname.replace("\\", "\\"+"\\");
+		ResultSet rs = mysql.getResult("SELECT * FROM Einkaufslisten WHERE "+Wert.Listenname.getName()+"='"+listenname+"' AND UserID="+this.iD);
 		try {
 			if(rs.next()) {
 				return true;
@@ -84,12 +88,24 @@ public class User {
 		
 	}
 	
-	public void createEinkaufsliste(String Listenname) {
+	public static String QuoteForMySQL(String toQuote) {
+		toQuote = toQuote.replace("\'", "\\\\"+"\'");
+		toQuote = toQuote.replace("\"", "\\"+"\"");
+		toQuote = toQuote.replace("[", "\\"+"[");
+		toQuote = toQuote.replace("]", "\\"+"]");
+		toQuote = toQuote.replace("(", "\\"+"(");
+		toQuote = toQuote.replace(")", "\\"+")");
+		toQuote = toQuote.replace("\\", "\\"+"\\");
+		return toQuote;
+	}
+	
+	public void createEinkaufsliste(String listenname) {
+		listenname = QuoteForMySQL(listenname);
 		try {
 			Statement st = mysql.getCon().createStatement();
-			st.executeUpdate("INSERT INTO Einkaufslisten(ListenID, GruppenID, UserID, Listenname) VALUES (Null,-1,"+this.iD+","+Listenname+")");
+			st.executeUpdate("INSERT INTO Einkaufslisten(ListenID, GruppenID, UserID, Listenname) VALUES (Null,-1,"+this.iD+",'"+listenname+"')");
 			
-			int lastid = mysql.getInt("*", Tabellen.Einkaufslisten, Wert.Listenname, Listenname, Wert.ListenID);
+			int lastid = mysql.getInt("*", Tabellen.Einkaufslisten, Wert.Listenname, listenname, Wert.ListenID);
 			st.executeUpdate("INSERT INTO "+Tabellen.User_hat_listen.getName()+"(UserID, ListenID) VALUES ("+this.iD+","+lastid+")");
 		} catch (SQLException e) {
 			if(Utils.debug)
@@ -98,6 +114,10 @@ public class User {
 	}
 	
 	public static void createUser(String Benutzername, String name , String vorname, long geburtsdatum, String pw) {
+		Benutzername = QuoteForMySQL(Benutzername);
+		name = QuoteForMySQL(name);
+		vorname = QuoteForMySQL(vorname);
+		pw = QuoteForMySQL(pw);
 		MySQL mysql = Geteilte_Einkaufsliste.getMySQL();
 		int id = new Random().nextInt(999999);
 		do {

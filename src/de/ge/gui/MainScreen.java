@@ -7,9 +7,13 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.InputMethodEvent;
+import java.awt.event.InputMethodListener;
 import java.util.ArrayList;
-import java.util.Iterator;
 
+import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -20,14 +24,14 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import de.ge.main.Geteilte_Einkaufsliste;
 import de.ge.mysql.MySQL;
 import de.ge.user.User;
 import de.ge.utils.PrettyColor;
-import de.ge.utils.Tabellen;
-import de.ge.utils.Wert;
 
 public class MainScreen {
 
@@ -36,14 +40,14 @@ public class MainScreen {
 	private JButton btnListeerstellen = new JButton();
 	private DefaultListModel listModel = new DefaultListModel();
 	private JList lListen = new JList(listModel);
-	private JScrollPane lListenScrollPane = new JScrollPane(lListen);
+	private JScrollPane lListenScrollPane = new JScrollPane(getlListen());
 	private JTextField tfListenName = new JTextField();
 	private JButton btnListeLoeschen = new JButton();
 	private JButton btnEinstellung = new JButton();
 	private JButton btnHinzufuegen = new JButton();
 	private JTable jTable1 = new JTable(20, 5);
-	private DefaultTableModel jTable1Model = (DefaultTableModel) jTable1.getModel();
-	private JScrollPane jTable1ScrollPane = new JScrollPane(jTable1);
+	private DefaultTableModel jTable1Mode = (DefaultTableModel) jTable1.getModel();
+	private JScrollPane jTableScrollPane = new JScrollPane(jTable1);
 	private JButton btnOefnnen = new JButton();
 	private JButton btnZurück = new JButton();
 	private User u = Geteilte_Einkaufsliste.getUser();
@@ -66,7 +70,7 @@ public class MainScreen {
 		cp.setBackground(PrettyColor.BLUE);
 		cp.setLayout(null);
 
-		lblListen.setBounds(0, 0, 246, 79);
+		lblListen.setBounds(0, 0, 246, 80);
 		lblListen.setText("Listen:");
 		lblListen.setFont(new Font("Comic Sans MS", Font.BOLD, 40));
 		lblListen.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -75,7 +79,29 @@ public class MainScreen {
 		lblListen.setForeground(PrettyColor.WHITE);
 		lblListen.setOpaque(true);
 		cp.add(lblListen);
-		btnListeerstellen.setBounds(8, 488, 115, 33);
+		
+		
+		ArrayList<String> listen = u.getListenname();
+		for (int i = 0; i < listen.size(); i++) {
+			listModel.add(i, listen.get(i));
+		}
+		getlListen().setFont(new Font("Comic Sans MS", Font.BOLD, 24));
+		getlListen().setBackground(PrettyColor.LITHEBLUE);
+		getlListen().setForeground(PrettyColor.WHITE);
+		getlListen().setModel(listModel);
+		lListenScrollPane.setBounds(0, (int)(lblListen.getBounds().getY()+lblListen.getBounds().getHeight()), (int)lblListen.getBounds().getWidth(), 340);
+		lListenScrollPane.setBorder(BorderFactory.createEmptyBorder());
+		getlListen().addListSelectionListener(new ListListener(this));
+		cp.add(lListenScrollPane);
+		tfListenName.setBounds(0, (int)(lListenScrollPane.getBounds().getY()+lListenScrollPane.getBounds().getHeight()), 246, 60);
+		tfListenName.setFont(new Font("Comic Sans MS", Font.BOLD, 24));
+		tfListenName.setBackground(PrettyColor.LITHEBLUE);
+		tfListenName.setForeground(PrettyColor.WHITE);
+		tfListenName.setBorder(BorderFactory.createEmptyBorder());
+		cp.add(tfListenName);
+		
+		
+		btnListeerstellen.setBounds(5, (int)(tfListenName.getBounds().getY()+tfListenName.getBounds().getHeight()+5), 115, 33);
 		btnListeerstellen.setText("Liste erstellen");
 		btnListeerstellen.setMargin(new Insets(2, 2, 2, 2));
 		btnListeerstellen.addActionListener(new ActionListener() {
@@ -89,22 +115,7 @@ public class MainScreen {
 		btnListeerstellen.setFont(new Font("Comic Sans MS", Font.BOLD, 14));
 		cp.add(btnListeerstellen);
 		
-		ArrayList<String> listen = u.getListenname();
-		for (int i = 0; i < listen.size(); i++) {
-			listModel.add(i, listen.get(i));
-		}
-		lListen.setModel(listModel);
-		lListenScrollPane.setBounds(0, 80, 246, 340);
-		lListen.setFont(new Font("Comic Sans MS", Font.BOLD, 24));
-		lListen.setBackground(PrettyColor.LITHEBLUE);
-		lListen.setForeground(PrettyColor.WHITE);
-		cp.add(lListenScrollPane);
-		tfListenName.setBounds(0, 424, 246, 60);
-		tfListenName.setFont(new Font("Comic Sans MS", Font.BOLD, 24));
-		tfListenName.setBackground(PrettyColor.LITHEBLUE);
-		tfListenName.setForeground(PrettyColor.WHITE);
-		cp.add(tfListenName);
-		btnListeLoeschen.setBounds(128, 488, 115, 33);
+		btnListeLoeschen.setBounds((int)(btnListeerstellen.getBounds().getX()+btnListeerstellen.getBounds().getWidth()+5), (int)(tfListenName.getBounds().getY()+tfListenName.getBounds().getHeight()+5), 115, 33);
 		btnListeLoeschen.setText("Liste Löschen");
 		btnListeLoeschen.setMargin(new Insets(2, 2, 2, 2));
 		btnListeLoeschen.addActionListener(new ActionListener() {
@@ -116,33 +127,8 @@ public class MainScreen {
 		btnListeLoeschen.setBackground(PrettyColor.RED);
 		btnListeLoeschen.setForeground(PrettyColor.WHITE);
 		cp.add(btnListeLoeschen);
-		btnEinstellung.setBounds(128, 528, 115, 33);
-		btnEinstellung.setText("Einstellung");
-		btnEinstellung.setMargin(new Insets(2, 2, 2, 2));
-		btnEinstellung.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				btnEinstellung_ActionPerformed(evt);
-			}
-		});
-		btnEinstellung.setFont(new Font("Comic Sans MS", Font.BOLD, 14));
-		btnEinstellung.setBackground(PrettyColor.LITHEBLUE);
-		btnEinstellung.setForeground(PrettyColor.WHITE);
-		cp.add(btnEinstellung);
-		jTable1ScrollPane.setBounds(264, 8, 644, 502);
-		jTable1.setRowHeight(1);
-		jTable1.setRowSelectionAllowed(false);
-		jTable1.setFont(new Font("Comic Sans MS", Font.BOLD, 14));
-		jTable1.setAutoCreateRowSorter(false);
-		jTable1.getColumnModel().getColumn(0).setHeaderValue("Artikel");
-		jTable1.getColumnModel().getColumn(1).setHeaderValue("Bezeichnung");
-		jTable1.getColumnModel().getColumn(2).setHeaderValue("Stk. Zahl");
-		jTable1.getColumnModel().getColumn(3).setHeaderValue("Preis je. 1");
-		jTable1.getColumnModel().getColumn(4).setHeaderValue("URL-Link");
-		cp.add(jTable1ScrollPane);
 		
-		
-		
-		btnOefnnen.setBounds(8, 528, 115, 33);
+		btnOefnnen.setBounds((int)(btnListeerstellen.getBounds().getX()), (int)(btnListeLoeschen.getBounds().getY()+btnListeLoeschen.getBounds().getHeight()+5), 115, 33);
 		btnOefnnen.setText("Öfnnen");
 		btnOefnnen.setMargin(new Insets(2, 2, 2, 2));
 		btnOefnnen.addActionListener(new ActionListener() {
@@ -154,8 +140,35 @@ public class MainScreen {
 		btnOefnnen.setForeground(PrettyColor.WHITE);
 		btnOefnnen.setFont(new Font("Comic Sans MS", Font.BOLD, 14));
 		cp.add(btnOefnnen);
+		
+		
+		btnEinstellung.setBounds((int)(btnOefnnen.getBounds().getX()+btnOefnnen.getBounds().getWidth()+5), (int)(btnListeerstellen.getBounds().getY()+btnListeerstellen.getBounds().getHeight()+5), 115, 33);
+		btnEinstellung.setText("Einstellung");
+		btnEinstellung.setMargin(new Insets(2, 2, 2, 2));
+		btnEinstellung.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				btnEinstellung_ActionPerformed(evt);
+			}
+		});
+		btnEinstellung.setFont(new Font("Comic Sans MS", Font.BOLD, 14));
+		btnEinstellung.setBackground(PrettyColor.LITHEBLUE);
+		btnEinstellung.setForeground(PrettyColor.WHITE);
+		cp.add(btnEinstellung);
+		
+		
+		jTableScrollPane.setBounds((int)(lblListen.getBounds().getX()+lblListen.getBounds().getWidth()+10), 10, 644, 502);
+		jTable1.setRowHeight(1);
+		jTable1.setRowSelectionAllowed(false);
+		jTable1.setFont(new Font("Comic Sans MS", Font.BOLD, 14));
+		jTable1.setAutoCreateRowSorter(false);
+		jTable1.getColumnModel().getColumn(0).setHeaderValue("Artikel");
+		jTable1.getColumnModel().getColumn(1).setHeaderValue("Bezeichnung");
+		jTable1.getColumnModel().getColumn(2).setHeaderValue("Stk. Zahl");
+		jTable1.getColumnModel().getColumn(3).setHeaderValue("Preis je. 1");
+		jTable1.getColumnModel().getColumn(4).setHeaderValue("URL-Link");
+		cp.add(jTableScrollPane);
 
-		btnHinzufuegen.setBounds(330, 528, 115, 33);
+		btnHinzufuegen.setBounds(330, (int)(btnEinstellung.getBounds().getY()), 115, 33);
 		btnHinzufuegen.setText("Hinzufügen");
 		btnHinzufuegen.setMargin(new Insets(2, 2, 2, 2));
 		btnHinzufuegen.addActionListener(new ActionListener() {
@@ -169,7 +182,7 @@ public class MainScreen {
 		cp.add(btnHinzufuegen);
 		
 		
-		btnZurück.setBounds(660, 528, 115, 33);
+		btnZurück.setBounds(660, (int)(btnEinstellung.getBounds().getY()), 115, 33);
 		btnZurück.setText("Zurück");
 		btnZurück.setMargin(new Insets(2, 2, 2, 2));
 		btnZurück.addActionListener(new ActionListener() {
@@ -190,6 +203,10 @@ public class MainScreen {
 	public void setjTable1(JTable jTable1) {
 		this.jTable1 = jTable1;
 	}
+	public DefaultTableModel getjTable1Mode() {
+		return jTable1Mode;
+	}
+	
 	public void btnZurück_ActionPerformed(ActionEvent e) {
 		if (e.getSource() == btnZurück) {
 			frame.dispose();
@@ -199,9 +216,9 @@ public class MainScreen {
 
 	public void btnHinzufuegen_ActionPerformed(ActionEvent e) {
 		if (e.getSource() == btnHinzufuegen) {
-			if(lListen.getSelectedValue() != null) {
+			if(getlListen().getSelectedValue() != null) {
 				frame.dispose();
-				new ArtikelScreen(lListen.getSelectedValue().toString(),this);
+				new ArtikelScreen(getlListen().getSelectedValue().toString(),this);
 			}else {
 				//Frag ihn ob er eine Liste anlegen möchte :P
 			}
@@ -240,6 +257,12 @@ public class MainScreen {
 
 		}
 
+	}
+	public JList getlListen() {
+		return lListen;
+	}
+	public void setlListen(JList lListen) {
+		this.lListen = lListen;
 	}
 
 }

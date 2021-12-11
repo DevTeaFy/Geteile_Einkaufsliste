@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
 
+import de.ge.user.User;
 import de.ge.utils.Tabellen;
 import de.ge.utils.Utils;
 import de.ge.utils.Wert;
@@ -69,7 +70,7 @@ public class MySQL {
 //			st.executeUpdate("DROP TABLE IF EXISTS User_hat_listen");
 //			st.executeUpdate("DROP TABLE IF EXISTS Gruppe_hat_listen");
 //			st.executeUpdate("DROP TABLE IF EXISTS Einkaufslisten");
-//			st.executeUpdate("DROP TABLE IF EXISTS Atikel");
+//			st.executeUpdate("DROP TABLE IF EXISTS Artikel");
 //			st.executeUpdate("DROP TABLE IF EXISTS User");
 //			st.executeUpdate("DROP TABLE IF EXISTS Gruppen");
 			
@@ -79,8 +80,8 @@ public class MySQL {
 			st.executeUpdate("CREATE TABLE IF NOT EXISTS Einkaufslisten(ListenID int NOT NULL AUTO_INCREMENT, GruppenID int NOT NULL, UserID int NOT NULL, Listenname VARCHAR(50),PRIMARY KEY (ListenID))");
 			st.executeUpdate("CREATE TABLE IF NOT EXISTS User_hat_listen(UserID integer NOT NULL,ListenID integer NOT NULL, FOREIGN KEY (UserID) REFERENCES User (UserID), FOREIGN KEY (ListenID) REFERENCES Einkaufslisten (ListenID),PRIMARY KEY (UserID,ListenID))");
 			st.executeUpdate("CREATE TABLE IF NOT EXISTS Gruppe_hat_listen(GruppenID integer NOT NULL,ListenID integer NOT NULL,FOREIGN KEY (GruppenID) REFERENCES Gruppen (GruppenID),FOREIGN KEY (ListenID) REFERENCES Einkaufslisten (ListenID),PRIMARY KEY (GruppenID,ListenID))");
-			st.executeUpdate("CREATE TABLE IF NOT EXISTS Atikel(ArtikelID integer NOT NULL,ArtikelName varchar(50),Bezeichnung varchar(50),Link varchar(50),Typ varchar(50),PRIMARY KEY (ArtikelID))");
-			st.executeUpdate("CREATE TABLE IF NOT EXISTS Listen_Inhalte(ListenID integer NOT NULL,ArtikelID integer NOT NULL, Menge integer NOT NULL, FOREIGN KEY (ListenID) REFERENCES Einkaufslisten (ListenID), FOREIGN KEY (ArtikelID) REFERENCES Atikel (ArtikelID), PRIMARY KEY (ListenID,ArtikelID))");
+			st.executeUpdate("CREATE TABLE IF NOT EXISTS Artikel(ArtikelID integer NOT NULL,ArtikelName varchar(50),Bezeichnung varchar(50),Link varchar(50),Typ varchar(50),PRIMARY KEY (ArtikelID))");
+			st.executeUpdate("CREATE TABLE IF NOT EXISTS Listen_Inhalte(ListenID integer NOT NULL,ArtikelID integer NOT NULL, Menge integer NOT NULL, FOREIGN KEY (ListenID) REFERENCES Einkaufslisten (ListenID), FOREIGN KEY (ArtikelID) REFERENCES Artikel (ArtikelID), PRIMARY KEY (ListenID,ArtikelID))");
 			if(Utils.debug)
 				System.out.println("Tabels erfolgreich angelegt oder noch existent");
 		} catch (SQLException e) {
@@ -127,6 +128,7 @@ public class MySQL {
 	
 	
 	
+	
 	public void setString(Tabellen Tabelle,Wert setwert,Object setvalue,Wert Where,Object Value) {
 		try {
 			Statement st = con.createStatement();
@@ -165,6 +167,7 @@ public class MySQL {
 		}
 	}
 	public boolean benutzerNameExists(String benutzername) {
+		benutzername = User.QuoteForMySQL(benutzername);
 		ResultSet rs = getResult("SELECT * FROM User WHERE "+Wert.Benutzername.getName()+"='"+benutzername+"'");
 		try {
 			if(rs.next()) {

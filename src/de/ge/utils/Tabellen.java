@@ -9,7 +9,7 @@ public enum Tabellen {
 	Einkaufslisten("Einkaufslisten"),
 	User_hat_listen("User_hat_listen"),
 	Gruppe_hat_listen("Gruppe_hat_listen"),
-	Atikel("Atikel"),
+	Artikel("Artikel"),
 	Listen_Inhalte("Listen_Inhalte");
 
 	private String name;

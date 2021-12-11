@@ -40,8 +40,8 @@ public class ArtikelScreen {
 	public ArtikelScreen(String name, MainScreen mainscreen) {
 		this.mainScreen = mainscreen;
 		this.frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		int frameWidth = 640;
-		int frameHeight = 327;
+		int frameWidth = 600;
+		int frameHeight = 300;
 		this.frame.setSize(frameWidth, frameHeight);
 		Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
 		int x = (d.width - this.frame.getSize().width) / 2;
@@ -53,7 +53,7 @@ public class ArtikelScreen {
 		cp.setBackground(PrettyColor.BLUE);
 		cp.setLayout(null);
 
-		lblArtikel.setBounds(24, 56, 110, 27);
+		lblArtikel.setBounds(20, 20, 110, 30);
 		lblArtikel.setText("Artikel");
 		lblArtikel.setFont(new Font("Comic Sans MS", Font.BOLD, 16));
 		lblArtikel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -61,7 +61,7 @@ public class ArtikelScreen {
 		lblArtikel.setForeground(PrettyColor.WHITE);
 		lblArtikel.setOpaque(true);
 		cp.add(lblArtikel);
-		lblBezeichnung.setBounds(24, 88, 110, 23);
+		lblBezeichnung.setBounds((int)lblArtikel.getBounds().getX(), (int)(lblArtikel.getBounds().getY()+lblArtikel.getBounds().getHeight()+5), 110, 30);
 		lblBezeichnung.setText("Bezeichnung");
 		lblBezeichnung.setFont(new Font("Comic Sans MS", Font.BOLD, 14));
 		lblBezeichnung.setHorizontalAlignment(SwingConstants.CENTER);
@@ -69,7 +69,7 @@ public class ArtikelScreen {
 		lblBezeichnung.setForeground(PrettyColor.WHITE);
 		lblBezeichnung.setOpaque(true);
 		cp.add(lblBezeichnung);
-		lblStkZahl.setBounds(24, 120, 110, 23);
+		lblStkZahl.setBounds((int)lblArtikel.getBounds().getX(), (int)(lblBezeichnung.getBounds().getY()+lblBezeichnung.getBounds().getHeight()+5), 110, 30);
 		lblStkZahl.setText("Stk. Zahl");
 		lblStkZahl.setFont(new Font("Comic Sans MS", Font.BOLD, 14));
 		lblStkZahl.setHorizontalAlignment(SwingConstants.CENTER);
@@ -77,7 +77,7 @@ public class ArtikelScreen {
 		lblStkZahl.setForeground(PrettyColor.WHITE);
 		lblStkZahl.setOpaque(true);
 		cp.add(lblStkZahl);
-		lblPreisje1.setBounds(24, 152, 110, 23);
+		lblPreisje1.setBounds((int)lblArtikel.getBounds().getX(), (int)(lblStkZahl.getBounds().getY()+lblStkZahl.getBounds().getHeight()+5), 110, 30);
 		lblPreisje1.setText("Preis je. 1");
 		lblPreisje1.setBackground(PrettyColor.LITHEBLUE);
 		lblPreisje1.setForeground(PrettyColor.WHITE);
@@ -85,7 +85,7 @@ public class ArtikelScreen {
 		lblPreisje1.setFont(new Font("Comic Sans MS", Font.BOLD, 14));
 		lblPreisje1.setHorizontalAlignment(SwingConstants.CENTER);
 		cp.add(lblPreisje1);
-		lblURLLink.setBounds(24, 184, 110, 23);
+		lblURLLink.setBounds((int)lblArtikel.getBounds().getX(), (int)(lblPreisje1.getBounds().getY()+lblPreisje1.getBounds().getHeight()+5), 110, 30);
 		lblURLLink.setText("URL-Link");
 		lblURLLink.setBackground(PrettyColor.LITHEBLUE);
 		lblURLLink.setForeground(PrettyColor.WHITE);
@@ -93,17 +93,16 @@ public class ArtikelScreen {
 		lblURLLink.setFont(new Font("Comic Sans MS", Font.BOLD, 14));
 		lblURLLink.setHorizontalAlignment(SwingConstants.CENTER);
 		cp.add(lblURLLink);
-		tfArtikel.setBounds(136, 64, 150, 20);
+		tfArtikel.setBounds((int)(lblArtikel.getBounds().getX()+lblArtikel.getBounds().getWidth()+5), (int)lblArtikel.getBounds().getY(), 150, 30);
 		cp.add(tfArtikel);
-		tfBezeichnung.setBounds(136, 96, 150, 20);
+		tfBezeichnung.setBounds((int)(lblBezeichnung.getBounds().getX()+lblBezeichnung.getBounds().getWidth()+5),  (int)(tfArtikel.getBounds().getY()+tfArtikel.getBounds().getHeight()+5), 150, 30);
 		cp.add(tfBezeichnung);
-		tfSTKzahl.setBounds(136, 128, 150, 20);
+		tfSTKzahl.setBounds((int)(lblStkZahl.getBounds().getX()+lblStkZahl.getBounds().getWidth()+5), (int)(tfBezeichnung.getBounds().getY()+tfBezeichnung.getBounds().getHeight()+5), 150, 30);
 		cp.add(tfSTKzahl);
-		tfPreisje1.setBounds(136, 160, 150, 20);
+		tfPreisje1.setBounds((int)(lblPreisje1.getBounds().getX()+lblPreisje1.getBounds().getWidth()+5), (int)(tfSTKzahl.getBounds().getY()+tfSTKzahl.getBounds().getHeight()+5), 150, 30);
 		cp.add(tfPreisje1);
-		tfURLLINK.setBounds(136, 192, 150, 20);
+		tfURLLINK.setBounds((int)(lblURLLink.getBounds().getX()+lblURLLink.getBounds().getWidth()+5), (int)(tfPreisje1.getBounds().getY()+tfPreisje1.getBounds().getHeight()+5), 150, 30);
 		cp.add(tfURLLINK);
-		btnHinzufuegen.setBounds(312, 96, 91, 33);
 		btnHinzufuegen.setText("Hinzufügen");
 		btnHinzufuegen.setMargin(new Insets(2, 2, 2, 2));
 		btnHinzufuegen.addActionListener(new ActionListener() {
@@ -114,8 +113,9 @@ public class ArtikelScreen {
 		btnHinzufuegen.setFont(new Font("Comic Sans MS", Font.BOLD, 14));
 		btnHinzufuegen.setBackground(PrettyColor.LITHEBLUE);
 		btnHinzufuegen.setForeground(PrettyColor.WHITE);
+		btnHinzufuegen.setBounds((int)(tfBezeichnung.getBounds().getX()+tfBezeichnung.getBounds().getWidth()+30), (int)(tfBezeichnung.getBounds().getY()), 91, 30);
 		cp.add(btnHinzufuegen);
-		btnBearbeiten.setBounds(432, 96, 91, 33);
+		btnBearbeiten.setBounds((int)(btnHinzufuegen.getBounds().getX()+btnHinzufuegen.getBounds().getWidth()+30), (int)(btnHinzufuegen.getBounds().getY()), 91, 30);
 		btnBearbeiten.setText("Bearbeiten");
 		btnBearbeiten.setMargin(new Insets(2, 2, 2, 2));
 		btnBearbeiten.addActionListener(new ActionListener() {
@@ -128,7 +128,7 @@ public class ArtikelScreen {
 		btnBearbeiten.setForeground(PrettyColor.WHITE);
 		cp.add(btnBearbeiten);
 
-		btnLoeschen.setBounds(312, 152, 91, 33);
+		btnLoeschen.setBounds((int)(tfPreisje1.getBounds().getX()+tfPreisje1.getBounds().getWidth()+30), (int)(tfPreisje1.getBounds().getY()), 91, 30);
 		btnLoeschen.setText("Löschen");
 		btnLoeschen.setMargin(new Insets(2, 2, 2, 2));
 		btnLoeschen.addActionListener(new ActionListener() {
@@ -141,7 +141,7 @@ public class ArtikelScreen {
 		btnLoeschen.setFont(new Font("Comic Sans MS", Font.BOLD, 14));
 		cp.add(btnLoeschen);
 
-		btnClear.setBounds(432, 152, 91, 33);
+		btnClear.setBounds((int)(btnLoeschen.getBounds().getX()+btnLoeschen.getBounds().getWidth()+30), (int)(btnLoeschen.getBounds().getY()), 91, 30);
 		btnClear.setText("Clear");
 		btnClear.setMargin(new Insets(2, 2, 2, 2));
 		btnClear.addActionListener(new ActionListener() {
@@ -154,7 +154,7 @@ public class ArtikelScreen {
 		btnClear.setFont(new Font("Comic Sans MS", Font.BOLD, 14));
 		cp.add(btnClear);
 
-		btnZurück.setBounds(432, 220, 91, 33);
+		btnZurück.setBounds((int)(btnClear.getBounds().getX()), (int)(btnClear.getBounds().getY()+btnClear.getBounds().getHeight()+40), 91, 30);
 		btnZurück.setText("Zurück");
 		btnZurück.setMargin(new Insets(2, 2, 2, 2));
 		btnZurück.addActionListener(new ActionListener() {
