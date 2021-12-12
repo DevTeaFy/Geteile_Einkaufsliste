@@ -1,6 +1,6 @@
 package de.ge.main;
 
-import de.ge.gui.LoginScreen;
+import de.ge.gui.screens.LoginScreen;
 import de.ge.mysql.MySQL;
 import de.ge.user.User;
 

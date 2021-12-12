@@ -1,4 +1,4 @@
-package de.ge.gui;
+package de.ge.gui.screens;
 
 import java.awt.Color;
 import java.awt.Container;
@@ -17,6 +17,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
+import de.ge.gui.listener.CloseWindowListener;
 import de.ge.main.Geteilte_Einkaufsliste;
 import de.ge.user.User;
 import de.ge.utils.PrettyColor;

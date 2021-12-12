@@ -1,4 +1,4 @@
-package de.ge.gui;
+package de.ge.gui.screens;
 
 import java.awt.Container;
 import java.awt.Dimension;
@@ -27,6 +27,7 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.table.DefaultTableModel;
 
+import de.ge.gui.listener.ListListener;
 import de.ge.main.Geteilte_Einkaufsliste;
 import de.ge.mysql.MySQL;
 import de.ge.user.User;

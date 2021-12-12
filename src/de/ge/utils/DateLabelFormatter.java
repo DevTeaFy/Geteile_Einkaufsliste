@@ -1,4 +1,4 @@
-package de.ge.gui;
+package de.ge.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

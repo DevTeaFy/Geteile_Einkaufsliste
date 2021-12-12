@@ -1,4 +1,4 @@
-package de.ge.gui;
+package de.ge.gui.screens;
 
 import java.awt.Container;
 import java.awt.Dimension;
@@ -24,8 +24,10 @@ import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
 
+import de.ge.gui.listener.FeldFoucosListener;
 import de.ge.main.Geteilte_Einkaufsliste;
 import de.ge.user.User;
+import de.ge.utils.DateLabelFormatter;
 import de.ge.utils.PrettyColor;
 import de.ge.utils.Utils;
 

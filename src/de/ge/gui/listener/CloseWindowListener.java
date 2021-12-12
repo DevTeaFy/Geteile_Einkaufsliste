@@ -1,4 +1,4 @@
-package de.ge.gui;
+package de.ge.gui.listener;
 
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;

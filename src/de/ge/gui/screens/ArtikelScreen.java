@@ -1,4 +1,4 @@
-package de.ge.gui;
+package de.ge.gui.screens;
 
 import java.awt.Container;
 import java.awt.Dimension;
