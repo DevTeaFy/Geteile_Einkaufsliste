@@ -18,7 +18,9 @@ public enum Wert {
 	Link("Link"),
 	Typ("Typ"),
 	Preis("Preis"),
-	Menge("Menge");
+	Menge("Menge"),
+	InvitetdUserID("InvitetdUserID"),
+	ErstellerID("ErstellerID");
 	
 	
 	private String name;

@@ -8,6 +8,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
 
+import javax.swing.JOptionPane;
+
+import de.ge.main.Geteilte_Einkaufsliste;
 import de.ge.user.User;
 import de.ge.utils.Tabellen;
 import de.ge.utils.Utils;
@@ -65,6 +68,7 @@ public class MySQL {
 			Statement st = con.createStatement();
 			if(Utils.debug)
 				System.out.println("Versuche Tabels anzulegen");
+//			st.executeUpdate("DROP TABLE IF EXISTS User_Send_Gruppen_Invite");
 //			st.executeUpdate("DROP TABLE IF EXISTS Listen_Inhalte");
 //			st.executeUpdate("DROP TABLE IF EXISTS U_IN_G");
 //			st.executeUpdate("DROP TABLE IF EXISTS User_hat_listen");
@@ -74,8 +78,9 @@ public class MySQL {
 //			st.executeUpdate("DROP TABLE IF EXISTS User");
 //			st.executeUpdate("DROP TABLE IF EXISTS Gruppen");
 			
+			st.executeUpdate("CREATE TABLE IF NOT EXISTS User_Send_Gruppen_Invite(UserID int NOT NULL, InvitetdUserID int NOT NULL, GruppenID int NOT NULL, FOREIGN KEY (UserID) REFERENCES User (UserID), PRIMARY KEY(UserID))");
 			st.executeUpdate("CREATE TABLE IF NOT EXISTS User(UserID int UNIQUE NOT NULL AUTO_INCREMENT, Benutzername VARCHAR(50), Nachname VARCHAR(50), Vorname VARCHAR(50), Geburtsdatum Long, Password VARCHAR(50), PRIMARY KEY(UserID), UNIQUE (Benutzername))");
-			st.executeUpdate("CREATE TABLE IF NOT EXISTS Gruppen(GruppenID int NOT NULL AUTO_INCREMENT, GruppenName VARCHAR(50), PRIMARY KEY(GruppenID))");
+			st.executeUpdate("CREATE TABLE IF NOT EXISTS Gruppen(GruppenID int NOT NULL AUTO_INCREMENT, GruppenName VARCHAR(50), ErstellerID int, PRIMARY KEY(GruppenID))");
 			st.executeUpdate("CREATE TABLE IF NOT EXISTS U_IN_G(UserID int NOT NULL, GruppenID int NOT NULL, FOREIGN KEY (UserID) REFERENCES User (UserID), FOREIGN KEY (GruppenID) REFERENCES Gruppen (GruppenID),PRIMARY KEY (UserID,GruppenID))");
 			st.executeUpdate("CREATE TABLE IF NOT EXISTS Einkaufslisten(ListenID int NOT NULL AUTO_INCREMENT, GruppenID int NOT NULL, UserID int NOT NULL, Listenname VARCHAR(50),PRIMARY KEY (ListenID))");
 			st.executeUpdate("CREATE TABLE IF NOT EXISTS User_hat_listen(UserID integer NOT NULL,ListenID integer NOT NULL, FOREIGN KEY (UserID) REFERENCES User (UserID), FOREIGN KEY (ListenID) REFERENCES Einkaufslisten (ListenID),PRIMARY KEY (UserID,ListenID))");
@@ -91,6 +96,9 @@ public class MySQL {
 			}
 		}
 	}
+	
+	
+	
 	
 	
 	public String getString(String SelectWerte,Tabellen Tabelle,Wert Where,Object Value,Wert rueckgabewert) {
@@ -125,9 +133,6 @@ public class MySQL {
 			return -1;
 		}
 	}
-	
-	
-	
 	
 	public void setString(Tabellen Tabelle,Wert setwert,Object setvalue,Wert Where,Object Value) {
 		try {

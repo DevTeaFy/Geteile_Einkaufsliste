@@ -81,7 +81,7 @@ public class LoginScreen {
 	    useridfield.setBorder(BorderFactory.createEmptyBorder());
 	    useridfield.setBackground(PrettyColor.LITHEBLUE);
 	    useridfield.setForeground(PrettyColor.WHITE);
-	    useridfield.setToolTipText("Bitte nur Zahlen eingeben");
+	    useridfield.setToolTipText("Bitte den Benutzername eingeben");
 	    cp.add(useridfield);
 	   
 	    lblPasswort.setBounds((int)((frameWidth/2)-(100*1.5)), (useridfield.getBounds().y+useridfield.getBounds().height+abstand), 100, 20);

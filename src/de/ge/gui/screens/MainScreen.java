@@ -257,7 +257,7 @@ public class MainScreen {
 		
 		
 		btnZurück.setBounds(660, (int)(btnEinstellung.getBounds().getY()), 115, 33);
-		btnZurück.setText("Zurück");
+		btnZurück.setText("Logout");
 		btnZurück.setMargin(new Insets(2, 2, 2, 2));
 		btnZurück.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -329,7 +329,8 @@ public class MainScreen {
 
 	public void btnEinstellung_ActionPerformed(ActionEvent e) {
 		if (e.getSource() == btnEinstellung) {
-
+			this.frame.dispose();
+			new InviteScreen();
 		}
 	}
 

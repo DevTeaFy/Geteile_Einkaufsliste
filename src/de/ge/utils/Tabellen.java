@@ -10,7 +10,8 @@ public enum Tabellen {
 	User_hat_listen("User_hat_listen"),
 	Gruppe_hat_listen("Gruppe_hat_listen"),
 	Artikel("Artikel"),
-	Listen_Inhalte("Listen_Inhalte");
+	Listen_Inhalte("Listen_Inhalte"),
+	User_Send_Gruppen_Invite("User_Send_Gruppen_Invite");
 
 	private String name;
 	
