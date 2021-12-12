@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 
+import de.ge.main.Geteilte_Einkaufsliste;
 import de.ge.utils.PrettyColor;
 
 public class ArtikelScreen {
@@ -180,18 +181,19 @@ public class ArtikelScreen {
 	public void btnHinzufuegen_ActionPerformed(ActionEvent evt) {
 		if (evt.getSource() == btnHinzufuegen) {
 
-			this.mainScreen.getjTable1().getModel().setValueAt(tfArtikel.getText(), 1, 1);
 //	  jTable1.getColumnModel().getColumn(1)= tfBezeichnung.getText();
 //	  jTable1.getColumnModel().getColumn(2)= tfSTKzahl.getText();
 //	  jTable1.getColumnModel().getColumn(3)= tfPreisje1.getText();
 //	  jTable1.getColumnModel().getColumn(4) = tfURLLINK.getText();
+			
+			String Name = tfArtikel.getText();
+			String bez = tfBezeichnung.getText();
+			int stkz = Integer.valueOf(tfSTKzahl.getText());
+			double preis = Double.valueOf(tfPreisje1.getText());
+			String link = tfURLLINK.getText();
 
-			tfArtikel.getText();
-			tfBezeichnung.getText();
-			tfSTKzahl.getText();
-			tfPreisje1.getText();
-			tfURLLINK.getText();
-
+			Geteilte_Einkaufsliste.getMySQL().createArtikel(this.frame.getTitle().replace("ArtikelScreen -> ", ""), Name, bez, stkz, preis, link, "Typ lost");
+			
 		}
 	}
 

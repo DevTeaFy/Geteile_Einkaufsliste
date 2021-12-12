@@ -17,6 +17,7 @@ public enum Wert {
 	Bezeichnung("Bezeichnung"),
 	Link("Link"),
 	Typ("Typ"),
+	Preis("Preis"),
 	Menge("Menge");
 	
 	

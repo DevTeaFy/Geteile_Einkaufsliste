@@ -60,19 +60,35 @@ public class User {
 			
 			return null;
 		}
-		
-		
+	}
+	public ArrayList<String> getGruppenListenname(){
+		ArrayList<Integer> gruppenidliste = new ArrayList<>();
+		ArrayList<String> nameliste = new ArrayList<>();
+		try {
+			ResultSet rs = mysql.getResult("SELECT * FROM "+Tabellen.U_IN_G.getName()+" WHERE "+Wert.UserID.getName()+"="+this.iD);
+			while (rs.next()) {
+				gruppenidliste.add(rs.getInt(Wert.GruppenID.getName()));
+			}
+			for (int i = 0; i < gruppenidliste.size(); i++) {
+				nameliste.add(mysql.getString("*", Tabellen.Gruppe_hat_listen, Wert.ListenID, gruppenidliste.get(i), Wert.Listenname));
+			}
+			return nameliste;
+		} catch (SQLException e) {
+			if(Utils.debug)
+				e.printStackTrace();
+			return null;
+		}
 	}
 	
 	
 	public boolean hasListname(String listenname) {
-		listenname = listenname.replace("\'", "\\\\"+"\'");
+//		listenname = listenname.replace("\\", "\\"+"\\");
+		listenname = listenname.replace("\'", "\\"+"\'");
 		listenname = listenname.replace("\"", "\\"+"\"");
 		listenname = listenname.replace("[", "\\"+"[");
 		listenname = listenname.replace("]", "\\"+"]");
 		listenname = listenname.replace("(", "\\"+"(");
 		listenname = listenname.replace(")", "\\"+")");
-		listenname = listenname.replace("\\", "\\"+"\\");
 		ResultSet rs = mysql.getResult("SELECT * FROM Einkaufslisten WHERE "+Wert.Listenname.getName()+"='"+listenname+"' AND UserID="+this.iD);
 		try {
 			if(rs.next()) {

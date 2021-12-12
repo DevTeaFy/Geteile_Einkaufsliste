@@ -129,8 +129,10 @@ public class LoginScreen {
 					
 					if(pw.equals(datenbankpw)) {
 						Geteilte_Einkaufsliste.setUser(new User(useridfield.getText(), datenbankpw));
-						System.out.println("Login erfolgreich");
-						System.out.println(Geteilte_Einkaufsliste.getUser().getVorname());
+						if(Utils.debug) {
+							System.out.println("Login erfolgreich");
+							System.out.println(Geteilte_Einkaufsliste.getUser().getVorname());
+						}
 						frame.dispose();
 						new MainScreen();
 					}else {

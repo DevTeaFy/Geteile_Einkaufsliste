@@ -7,25 +7,24 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.InputMethodEvent;
-import java.awt.event.InputMethodListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import javax.swing.table.DefaultTableModel;
 
 import de.ge.main.Geteilte_Einkaufsliste;
@@ -37,17 +36,18 @@ public class MainScreen {
 
 	private JFrame frame = new JFrame();
 	private JLabel lblListen = new JLabel();
+	private JComboBox<String> cbbListen = new JComboBox<String>();
 	private JButton btnListeerstellen = new JButton();
 	private DefaultListModel listModel = new DefaultListModel();
-	private JList lListen = new JList(listModel);
+	private JList lListen = new JList();
 	private JScrollPane lListenScrollPane = new JScrollPane(getlListen());
 	private JTextField tfListenName = new JTextField();
 	private JButton btnListeLoeschen = new JButton();
 	private JButton btnEinstellung = new JButton();
 	private JButton btnHinzufuegen = new JButton();
-	private JTable jTable1 = new JTable(20, 5);
-	private DefaultTableModel jTable1Mode = (DefaultTableModel) jTable1.getModel();
-	private JScrollPane jTableScrollPane = new JScrollPane(jTable1);
+	private JTable jTable = new JTable(0, 5);
+	private DefaultTableModel jTableModel = (DefaultTableModel) jTable.getModel();
+	private JScrollPane jTableScrollPane = new JScrollPane(jTable);
 	private JButton btnOefnnen = new JButton();
 	private JButton btnZurück = new JButton();
 	private User u = Geteilte_Einkaufsliste.getUser();
@@ -80,20 +80,93 @@ public class MainScreen {
 		lblListen.setOpaque(true);
 		cp.add(lblListen);
 		
+		cbbListen.setBounds((int)(lblListen.getBounds().getX()), (int)(lblListen.getBounds().getY()+lblListen.getBounds().getHeight()), (int)lblListen.getBounds().getWidth(), 40);
+		cbbListen.setBackground(PrettyColor.NICE);
+		cbbListen.setForeground(PrettyColor.BLACK);
+		cbbListen.setFont(new Font("Comic Sans MS", Font.BOLD, 24));
+		cbbListen.addItem("Eigenelisten");
+		cbbListen.addItem("Gruppenlisten");
+		cbbListen.addItem("Eigenelisten & Gruppenlisten");
+		cbbListen.setPreferredSize(new Dimension(30,200));
+		cbbListen.addPopupMenuListener(new PopupMenuListener() {
+			
+			@Override
+			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+				cbbListen.setBounds((int)(lblListen.getBounds().getX()), (int)(lblListen.getBounds().getY()+lblListen.getBounds().getHeight()), 400, 40);
+				
+			}
+			
+			@Override
+			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+				cbbListen.setBounds((int)(lblListen.getBounds().getX()), (int)(lblListen.getBounds().getY()+lblListen.getBounds().getHeight()), (int)lblListen.getBounds().getWidth(), 40);
+				
+			}
+			
+			@Override
+			public void popupMenuCanceled(PopupMenuEvent e) {
+				cbbListen.setBounds((int)(lblListen.getBounds().getX()), (int)(lblListen.getBounds().getY()+lblListen.getBounds().getHeight()), (int)lblListen.getBounds().getWidth(), 40);
+				
+			}
+		});
+		cbbListen.setBorder(BorderFactory.createEmptyBorder());
+		cbbListen.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String toswitch = cbbListen.getSelectedItem().toString();
+				ArrayList<String> listen = u.getListenname();
+				ArrayList<String> gruppenlisten = u.getGruppenListenname();
+				switch (toswitch) {
+				case "Eigenelisten":
+						for(int i = listModel.getSize();i > 0;i--) {
+							listModel.remove(i-1);
+						}
+						for (int i = 0; i < listen.size(); i++) {
+							listModel.add(i, listen.get(i));
+						}
+					break;
+				case "Gruppenlisten":
+					for(int i = listModel.getSize();i > 0;i--) {
+						listModel.remove(i-1);
+					}
+					for (int i = 0; i < gruppenlisten.size(); i++) {
+						listModel.add(i, gruppenlisten.get(i));
+					}
+					break;
+				case "Eigenelisten & Gruppenlisten":
+					for(int i = listModel.getSize();i > 0;i--) {
+					listModel.remove(i-1);
+					}	
+					for (int i = 0; i < listen.size(); i++) {
+						listModel.add(i, listen.get(i));
+					}
+					for (int i = 0; i < gruppenlisten.size(); i++) {
+						listModel.add(i, gruppenlisten.get(i));
+					}
+					break;
+
+				default:
+					break;
+				}
+				
+			}
+		});
+		cbbListen.setSelectedIndex(0);
+		cp.add(cbbListen);
 		
 		ArrayList<String> listen = u.getListenname();
 		for (int i = 0; i < listen.size(); i++) {
 			listModel.add(i, listen.get(i));
 		}
-		getlListen().setFont(new Font("Comic Sans MS", Font.BOLD, 24));
-		getlListen().setBackground(PrettyColor.LITHEBLUE);
-		getlListen().setForeground(PrettyColor.WHITE);
-		getlListen().setModel(listModel);
-		lListenScrollPane.setBounds(0, (int)(lblListen.getBounds().getY()+lblListen.getBounds().getHeight()), (int)lblListen.getBounds().getWidth(), 340);
+		this.lListen.addListSelectionListener(new ListListener(this));
+		this.lListen.setFont(new Font("Comic Sans MS", Font.BOLD, 24));
+		this.lListen.setBackground(PrettyColor.LITHEBLUE);
+		this.lListen.setForeground(PrettyColor.WHITE);
+		this.lListen.setModel(listModel);
+		lListenScrollPane.setBounds((int)(lblListen.getBounds().getX()), (int)(cbbListen.getBounds().getY()+cbbListen.getBounds().getHeight()), (int)lblListen.getBounds().getWidth(), 340);
 		lListenScrollPane.setBorder(BorderFactory.createEmptyBorder());
-		getlListen().addListSelectionListener(new ListListener(this));
 		cp.add(lListenScrollPane);
-		tfListenName.setBounds(0, (int)(lListenScrollPane.getBounds().getY()+lListenScrollPane.getBounds().getHeight()), 246, 60);
+		tfListenName.setBounds((int)(lblListen.getBounds().getX()), (int)(lListenScrollPane.getBounds().getY()+lListenScrollPane.getBounds().getHeight()), 246, 60);
 		tfListenName.setFont(new Font("Comic Sans MS", Font.BOLD, 24));
 		tfListenName.setBackground(PrettyColor.LITHEBLUE);
 		tfListenName.setForeground(PrettyColor.WHITE);
@@ -101,7 +174,7 @@ public class MainScreen {
 		cp.add(tfListenName);
 		
 		
-		btnListeerstellen.setBounds(5, (int)(tfListenName.getBounds().getY()+tfListenName.getBounds().getHeight()+5), 115, 33);
+		btnListeerstellen.setBounds((int)(lblListen.getBounds().getX()+5), (int)(tfListenName.getBounds().getY()+tfListenName.getBounds().getHeight()+5), 115, 33);
 		btnListeerstellen.setText("Liste erstellen");
 		btnListeerstellen.setMargin(new Insets(2, 2, 2, 2));
 		btnListeerstellen.addActionListener(new ActionListener() {
@@ -157,15 +230,15 @@ public class MainScreen {
 		
 		
 		jTableScrollPane.setBounds((int)(lblListen.getBounds().getX()+lblListen.getBounds().getWidth()+10), 10, 644, 502);
-		jTable1.setRowHeight(1);
-		jTable1.setRowSelectionAllowed(false);
-		jTable1.setFont(new Font("Comic Sans MS", Font.BOLD, 14));
-		jTable1.setAutoCreateRowSorter(false);
-		jTable1.getColumnModel().getColumn(0).setHeaderValue("Artikel");
-		jTable1.getColumnModel().getColumn(1).setHeaderValue("Bezeichnung");
-		jTable1.getColumnModel().getColumn(2).setHeaderValue("Stk. Zahl");
-		jTable1.getColumnModel().getColumn(3).setHeaderValue("Preis je. 1");
-		jTable1.getColumnModel().getColumn(4).setHeaderValue("URL-Link");
+		jTable.setRowHeight(30);
+		jTable.setRowSelectionAllowed(false);
+		jTable.setFont(new Font("Comic Sans MS", Font.BOLD, 14));
+		jTable.setAutoCreateRowSorter(false);
+		jTable.getColumnModel().getColumn(0).setHeaderValue("Artikel");
+		jTable.getColumnModel().getColumn(1).setHeaderValue("Bezeichnung");
+		jTable.getColumnModel().getColumn(2).setHeaderValue("Stk. Zahl");
+		jTable.getColumnModel().getColumn(3).setHeaderValue("Preis je. 1");
+		jTable.getColumnModel().getColumn(4).setHeaderValue("URL-Link");
 		cp.add(jTableScrollPane);
 
 		btnHinzufuegen.setBounds(330, (int)(btnEinstellung.getBounds().getY()), 115, 33);
@@ -198,13 +271,13 @@ public class MainScreen {
 		this.frame.setVisible(true);
 	}
 	public JTable getjTable1() {
-		return jTable1;
+		return jTable;
 	}
 	public void setjTable1(JTable jTable1) {
-		this.jTable1 = jTable1;
+		this.jTable = jTable1;
 	}
 	public DefaultTableModel getjTable1Mode() {
-		return jTable1Mode;
+		return jTableModel;
 	}
 	
 	public void btnZurück_ActionPerformed(ActionEvent e) {
@@ -228,9 +301,16 @@ public class MainScreen {
 	public void btnListeerstellen_ActionPerformed(ActionEvent e) {
 		if (e.getSource() == btnListeerstellen) {
 			String listenname = tfListenName.getText();
-			if(!u.hasListname(listenname)) {
-				u.createEinkaufsliste(listenname);
-				listModel.addElement(listenname);
+			if(this.cbbListen.getSelectedItem().toString().equals("Eigenelisten")) {
+				if(!u.hasListname(listenname)) {
+					u.createEinkaufsliste(listenname);
+					listModel.addElement(listenname);
+				}
+			}else if(this.cbbListen.getSelectedItem().toString().equals("Gruppenlisten")) {
+//				if(!u.hasListname(listenname)) {
+//					u.createEinkaufsliste(listenname);
+//					listModel.addElement(listenname);
+//				}
 			}
 		}
 	}
@@ -254,7 +334,7 @@ public class MainScreen {
 
 	public void btnOefnnen_ActionPerformed(ActionEvent e) {
 		if (e.getSource() == btnOefnnen) {
-
+			ListListener.setArtikelOutOfListInTabel(this.lListen.getSelectedValue().toString());
 		}
 
 	}

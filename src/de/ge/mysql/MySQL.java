@@ -23,7 +23,7 @@ public class MySQL {
 	private Connection con = null;
 	
 	public MySQL() {}
-
+	
 	public void connectMySQL() {
 		try {
 			con = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database + "?autoReconnect=true", username, password);
@@ -80,7 +80,7 @@ public class MySQL {
 			st.executeUpdate("CREATE TABLE IF NOT EXISTS Einkaufslisten(ListenID int NOT NULL AUTO_INCREMENT, GruppenID int NOT NULL, UserID int NOT NULL, Listenname VARCHAR(50),PRIMARY KEY (ListenID))");
 			st.executeUpdate("CREATE TABLE IF NOT EXISTS User_hat_listen(UserID integer NOT NULL,ListenID integer NOT NULL, FOREIGN KEY (UserID) REFERENCES User (UserID), FOREIGN KEY (ListenID) REFERENCES Einkaufslisten (ListenID),PRIMARY KEY (UserID,ListenID))");
 			st.executeUpdate("CREATE TABLE IF NOT EXISTS Gruppe_hat_listen(GruppenID integer NOT NULL,ListenID integer NOT NULL,FOREIGN KEY (GruppenID) REFERENCES Gruppen (GruppenID),FOREIGN KEY (ListenID) REFERENCES Einkaufslisten (ListenID),PRIMARY KEY (GruppenID,ListenID))");
-			st.executeUpdate("CREATE TABLE IF NOT EXISTS Artikel(ArtikelID integer NOT NULL,ArtikelName varchar(50),Bezeichnung varchar(50),Link varchar(50),Typ varchar(50),PRIMARY KEY (ArtikelID))");
+			st.executeUpdate("CREATE TABLE IF NOT EXISTS Artikel(ArtikelID integer NOT NULL AUTO_INCREMENT,ArtikelName varchar(255),Bezeichnung TEXT,Link TEXT,Typ varchar(100), Preis DOUBLE, PRIMARY KEY (ArtikelID))");
 			st.executeUpdate("CREATE TABLE IF NOT EXISTS Listen_Inhalte(ListenID integer NOT NULL,ArtikelID integer NOT NULL, Menge integer NOT NULL, FOREIGN KEY (ListenID) REFERENCES Einkaufslisten (ListenID), FOREIGN KEY (ArtikelID) REFERENCES Artikel (ArtikelID), PRIMARY KEY (ListenID,ArtikelID))");
 			if(Utils.debug)
 				System.out.println("Tabels erfolgreich angelegt oder noch existent");
@@ -149,7 +149,23 @@ public class MySQL {
 		}
 	}
 	
-	
+	public void createArtikel(String listenname,String Artikelname,String Bezeichnung,int menge,double preis,String link,String Typ) {
+		Artikelname = User.QuoteForMySQL(Artikelname);
+		Bezeichnung = User.QuoteForMySQL(Bezeichnung);
+		link = User.QuoteForMySQL(link);
+		Typ = User.QuoteForMySQL(Typ);
+		try {
+			Statement st = this.con.createStatement();
+			st.executeUpdate("INSERT INTO Artikel(ArtikelID,ArtikelName,Bezeichnung,Link,Typ,Preis) VALUES (Null,'"+Artikelname+"','"+Bezeichnung+"','"+link+"','"+Typ+"',"+preis+")");
+			
+			int lastid = getInt("*", Tabellen.Einkaufslisten, Wert.Listenname, listenname, Wert.ListenID);
+			int artikelid = getInt("*", Tabellen.Artikel, Wert.ArtikelName, Artikelname, Wert.ArtikelID);
+			st.executeUpdate("INSERT INTO "+Tabellen.Listen_Inhalte.getName()+"(ListenID,ArtikelID,Menge) VALUES ("+lastid+","+artikelid+","+menge+")");
+		} catch (SQLException e) {
+			if(Utils.debug)
+				e.printStackTrace();
+		}
+	}
 	
 	
 	public boolean userIDExists(int ID) {
