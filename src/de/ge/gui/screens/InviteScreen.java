@@ -12,12 +12,12 @@ import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.WindowConstants;
-import javax.swing.table.DefaultTableModel;
 
 import de.ge.main.Geteilte_Einkaufsliste;
 import de.ge.utils.PrettyColor;
@@ -27,8 +27,9 @@ public class InviteScreen {
 	private JFrame frame = new JFrame();
 	private JButton btnGruppeertellen = new JButton();
 	private JTable jTable1 = new JTable(5, 5);
-	private DefaultTableModel jTable1Model = (DefaultTableModel) jTable1.getModel();
 	private JScrollPane jTable1ScrollPane = new JScrollPane(jTable1);
+	private JList lListen = new JList();
+	private JScrollPane lListenScrollPane = new JScrollPane(lListen);
 	private JButton btnZurueck = new JButton();
 	private JButton btnEinladungannehmen = new JButton();
 	private JButton btnEinladungabehlen = new JButton();

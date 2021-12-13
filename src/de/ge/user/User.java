@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
 
 import javax.swing.JOptionPane;
@@ -65,6 +66,9 @@ public class User {
 						mysql.getCon().createStatement().executeUpdate("INSERT INTO User_Send_Gruppen_Invite(UserID,InvitetdUserID,GruppenID) VALUES ("+this.iD+","+UserIDToInvite+","+GruppenID+")");
 					}
 				}
+			}else {
+				mysql.getCon().createStatement().executeUpdate(
+						"INSERT INTO User_Send_Gruppen_Invite(UserID,InvitetdUserID,GruppenID) VALUES ("+ this.iD + "," + UserIDToInvite + "," + GruppenID + ")");
 			}
 		} catch (SQLException e) {
 			if(Utils.debug)
@@ -106,8 +110,12 @@ public class User {
 	public ArrayList<String> getGruppenListenname(){
 		ArrayList<Integer> gruppenidliste = getGruppenIDs();
 		ArrayList<String> nameliste = new ArrayList<>();
+		ArrayList<Integer> listederlistenids = new ArrayList<>();
 		for (int i = 0; i < gruppenidliste.size(); i++) {
-			nameliste.add(mysql.getString("*", Tabellen.Gruppe_hat_listen, Wert.ListenID, gruppenidliste.get(i), Wert.Listenname));
+			listederlistenids.add(mysql.getInt("*", Tabellen.Gruppe_hat_listen, Wert.GruppenID, gruppenidliste.get(i), Wert.ListenID));
+		}
+		for (int i = 0; i < listederlistenids.size(); i++) {
+			nameliste.add(mysql.getString("*", Tabellen.Einkaufslisten, Wert.ListenID, listederlistenids.get(i), Wert.Listenname));
 		}
 		return nameliste;
 	}
@@ -226,10 +234,12 @@ public class User {
 					Statement st = mysql.getCon().createStatement();
 					st.executeUpdate("INSERT INTO Gruppen(GruppenID, GruppenName, ErstellerID) VALUES (Null,'"+Gruppenname+"','"+this.iD+"')");
 					ResultSet rs1 = mysql.getResult("SELECT * FROM Gruppe ORDER BY GruppenID DESC LIMIT 1");
+					int toreturn = -1;
 					if(rs1.next()) {
-						int toreturn = rs.getInt("GruppenID");
-						return toreturn;
+						toreturn = rs.getInt("GruppenID");
 					}
+					st.executeUpdate("INSERT INTO U_IN_G(UserID, GruppenID) VALUE ("+this.iD+","+toreturn+")");
+					return toreturn;
 				} catch (SQLException e) {
 					if(Utils.debug)
 						e.printStackTrace();
@@ -243,8 +253,6 @@ public class User {
 				e1.printStackTrace();
 			return -1;
 		}
-		return -1;
-		
 	}
 	
 	public static void createUser(String Benutzername, String name , String vorname, long geburtsdatum, String pw) {
