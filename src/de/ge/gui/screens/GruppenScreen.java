@@ -78,11 +78,15 @@ public class GruppenScreen {
 		btnZurueck.setText("Zurück");
 		btnZurueck.setMargin(new Insets(2, 2, 2, 2));
 		btnZurueck.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				btnZurueck_ActionPerformed(evt);
+			public void actionPerformed(ActionEvent e) {
+				btnZurueck_ActionPerformed(e);
 			}
-			
 		});
+		btnZurueck.setBackground(PrettyColor.LITHEBLUE);
+		btnZurueck.setForeground(PrettyColor.WHITE);
+		btnZurueck.setFont(new Font("Comic Sans MS", Font.BOLD, 14));
+		cp.add(btnZurueck);
+
 		cp.add(btnZurueck);
 		jTableScrollPane.setBounds(37, 78, 332, 342);
 		cp.add(jTableScrollPane);
@@ -103,12 +107,18 @@ public class GruppenScreen {
 		
 		cp.add(lblGruppenName);
 		btnUserEntfernen.setVisible(false);
+		
+		
 
 		this.frame.setVisible(true);
 	}
 
 	public void btnUserEinladen_ActionPerformed(ActionEvent evt) {
 		String benutzernametoinvite = JOptionPane.showInputDialog(this.frame, "Benutzername:", "Gruppen - Einladung", JOptionPane.PLAIN_MESSAGE);
+		if(benutzernametoinvite == null) {
+			System.out.println("Benutzername: War Null ABBRUCH!!!");
+			return;
+		}
 		if(Geteilte_Einkaufsliste.getMySQL().benutzerNameExists(benutzernametoinvite)) {
 			int id = Geteilte_Einkaufsliste.getMySQL().getInt("*", Tabellen.User, Wert.Benutzername, benutzernametoinvite, Wert.UserID);
 			int gruppenid = -1;
@@ -126,7 +136,8 @@ public class GruppenScreen {
 	}
 
 	public void btnZurueck_ActionPerformed(ActionEvent evt) {
-
+		this.frame.dispose();
+		new MainScreen();
 	}
 
 }

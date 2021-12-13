@@ -10,8 +10,10 @@ import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.EventObject;
 
 import javax.swing.BorderFactory;
+import javax.swing.CellEditor;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -19,12 +21,14 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
+import javax.swing.event.CellEditorListener;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.table.DefaultTableModel;
@@ -49,6 +53,7 @@ public class MainScreen {
 	private JButton btnListeLoeschen = new JButton();
 	private JButton btnEinstellung = new JButton();
 	private JButton btnHinzufuegen = new JButton();
+	private JButton btnGruppenScreen = new JButton();
 	private JTable jTable = new JTable(0, 5);
 	private DefaultTableModel jTableModel = (DefaultTableModel) jTable.getModel();
 	private JScrollPane jTableScrollPane = new JScrollPane(jTable);
@@ -228,9 +233,9 @@ public class MainScreen {
 		btnEinstellung.setForeground(PrettyColor.WHITE);
 		cp.add(btnEinstellung);
 		
-		
 		jTableScrollPane.setBounds((int)(lblListen.getBounds().getX()+lblListen.getBounds().getWidth()+10), 10, 644, 502);
 		jTable.setRowHeight(30);
+		jTable.setCellSelectionEnabled(false);
 		jTable.setRowSelectionAllowed(false);
 		jTable.setFont(new Font("Comic Sans MS", Font.BOLD, 14));
 		jTable.setAutoCreateRowSorter(false);
@@ -239,6 +244,7 @@ public class MainScreen {
 		jTable.getColumnModel().getColumn(2).setHeaderValue("Stk. Zahl");
 		jTable.getColumnModel().getColumn(3).setHeaderValue("Preis je. 1");
 		jTable.getColumnModel().getColumn(4).setHeaderValue("URL-Link");
+		jTable.setEnabled(false);
 		cp.add(jTableScrollPane);
 
 		btnHinzufuegen.setBounds(330, (int)(btnEinstellung.getBounds().getY()), 115, 33);
@@ -253,6 +259,19 @@ public class MainScreen {
 		btnHinzufuegen.setForeground(PrettyColor.WHITE);
 		btnHinzufuegen.setFont(new Font("Comic Sans MS", Font.BOLD, 14));
 		cp.add(btnHinzufuegen);
+		
+		btnGruppenScreen.setBounds(450, (int)(btnEinstellung.getBounds().getY()), 115, 33);
+		btnGruppenScreen.setText("Gruppen");
+		btnGruppenScreen.setMargin(new Insets(2, 2, 2, 2));
+		btnGruppenScreen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnGruppenScreen_ActionPerformed(e);
+			}
+		});
+		btnGruppenScreen.setBackground(PrettyColor.LITHEBLUE);
+		btnGruppenScreen.setForeground(PrettyColor.WHITE);
+		btnGruppenScreen.setFont(new Font("Comic Sans MS", Font.BOLD, 14));
+		cp.add(btnGruppenScreen);
 		
 		
 		btnZurück.setBounds(660, (int)(btnEinstellung.getBounds().getY()), 115, 33);
@@ -316,10 +335,31 @@ public class MainScreen {
 					listModel.addElement(listenname);
 				}
 			}else if(this.cbbListen.getSelectedItem().toString().equals("Gruppenlisten")) {
+				return;
 //				if(!u.hasListname(listenname)) {
-//					u.createEinkaufsliste(listenname);
-//					listModel.addElement(listenname);
+//					System.out.println(listenname);
+//					try {
+//						ResultSet rs = Geteilte_Einkaufsliste.getMySQL().getResult("SELECT * FROM U_IN_G WHERE UserID="+Geteilte_Einkaufsliste.getUser().getiD());
+//						System.out.println(rs.next());
+//						if(rs.next()) {
+//							while (rs.next()) {
+//								System.out.println(rs.getInt("GruppenID"));
+//								ResultSet getgruppenname = Geteilte_Einkaufsliste.getMySQL().getResult("SELECT * FROM Gruppen WHERE GruppenID="+rs.getInt("GruppenID")+" AND GruppenName='"+listenname+"'");
+//								if(getgruppenname.next()) {
+//									u.createGruppenEinkaufsliste(listenname, getgruppenname.getInt("GruppenID"));
+//									break;
+//								}
+//							}
+//						}
+//					} catch (SQLException e1) {
+//						if(Utils.debug)
+//							e1.printStackTrace();
+//					}
+//				}else {
+//					//Möchte er eine Gruppenliste draus machen?
 //				}
+			}else if(this.cbbListen.getSelectedItem().toString().equals("Eigenelisten & Gruppenlisten")) {
+				return;
 			}
 		}
 	}
@@ -355,6 +395,37 @@ public class MainScreen {
 			}
 		}
 
+	}
+	
+	public void btnGruppenScreen_ActionPerformed(ActionEvent e) {
+		if(e.getSource()==btnGruppenScreen) {
+			this.frame.dispose();
+			if(getlListen().getSelectedValue() == null) {
+				String gruppenname = JOptionPane.showInputDialog(this.frame, "Gruppenname:", "Gruppe - Erstellen", JOptionPane.PLAIN_MESSAGE);
+				String gruppenlistenname = JOptionPane.showInputDialog(this.frame, "Einkaufslistenname:", "Gruppen - Einkaufsliste - Erstellen", JOptionPane.PLAIN_MESSAGE);
+				if(gruppenname == null || gruppenlistenname == null) {
+					return;
+				}
+				int id = Geteilte_Einkaufsliste.getUser().createGruppe(gruppenname); 
+				System.out.println("Gruppen ID = "+id);
+				if(id != -1) {
+					this.frame.dispose();
+					u.createGruppenEinkaufsliste(gruppenlistenname, id);
+					new GruppenScreen(id,gruppenname);
+				}
+			}else {
+				String listenname = getlListen().getSelectedValue().toString();
+				ResultSet rs = Geteilte_Einkaufsliste.getMySQL().getResult("SELECT * FROM Einkaufslisten WHERE UserID="+Geteilte_Einkaufsliste.getUser().getiD()+" AND Listenname='"+this.lListen.getSelectedValue().toString()+"'");
+				try {
+					if(rs.next()) {
+						int gruppenID = rs.getInt("GruppenID");
+						new GruppenScreen(gruppenID,listenname);
+					}
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			}
+		}
 	}
 	public JList getlListen() {
 		return lListen;

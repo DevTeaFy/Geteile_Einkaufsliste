@@ -138,10 +138,12 @@ public class InviteScreen {
 
 	public void btnGruppeertellen_ActionPerformed(ActionEvent evt) {
 		String gruppenname = JOptionPane.showInputDialog(this.frame, "Gruppenname:", "Gruppe - Erstellen", JOptionPane.PLAIN_MESSAGE);
-		int id = Geteilte_Einkaufsliste.getUser().createGruppe(gruppenname);
-		if(id != -1) {
-			this.frame.dispose();
-			new GruppenScreen(id,gruppenname);
+		if(gruppenname != null) {
+			int id = Geteilte_Einkaufsliste.getUser().createGruppe(gruppenname);
+			if(id != -1) {
+				this.frame.dispose();
+				new GruppenScreen(id,gruppenname);
+			}
 		}
 	}
 
