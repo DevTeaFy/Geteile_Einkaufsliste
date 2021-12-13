@@ -7,6 +7,8 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -32,6 +34,7 @@ import de.ge.main.Geteilte_Einkaufsliste;
 import de.ge.mysql.MySQL;
 import de.ge.user.User;
 import de.ge.utils.PrettyColor;
+import de.ge.utils.Utils;
 
 public class MainScreen {
 
@@ -336,7 +339,15 @@ public class MainScreen {
 
 	public void btnOefnnen_ActionPerformed(ActionEvent e) {
 		if (e.getSource() == btnOefnnen) {
-			ListListener.setArtikelOutOfListInTabel(this.lListen.getSelectedValue().toString());
+			try {
+				ResultSet rs = Geteilte_Einkaufsliste.getMySQL().getResult("SELECT * FROM Einkaufslisten WHERE UserID="+Geteilte_Einkaufsliste.getUser().getiD()+" AND Listenname='"+this.lListen.getSelectedValue().toString()+"'");
+				if(rs.next()) {
+					ListListener.setArtikelOutOfListInTabel(rs.getInt("ListenID"));
+				}
+			} catch (SQLException e1) {
+				if(Utils.debug)
+					e1.printStackTrace();
+			}
 		}
 
 	}

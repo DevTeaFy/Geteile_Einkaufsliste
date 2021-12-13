@@ -35,20 +35,12 @@ public class ListListener implements ListSelectionListener{
 		
 	}
 	
-	public static void setArtikelOutOfListInTabel(String Listenname) {
-//		Listenname = Listenname.replace("\\", "\\"+"\\");
-		Listenname = Listenname.replace("\'", "\\\\\\"+"\'");
-		Listenname = Listenname.replace("\"", "\\"+"\"");
-		Listenname = Listenname.replace("[", "\\"+"[");
-		Listenname = Listenname.replace("]", "\\"+"]");
-		Listenname = Listenname.replace("(", "\\"+"(");
-		Listenname = Listenname.replace(")", "\\"+")");
+	public static void setArtikelOutOfListInTabel(int listenid) {
 		DefaultTableModel tp = ms.getjTable1Mode();
 		
 		for (int i = tp.getRowCount()-1;i>=0;i--) {
 			tp.removeRow(i);
 		}
-		int listenid = mysql.getInt("*", Tabellen.Einkaufslisten, Wert.Listenname, Listenname, Wert.ListenID);
 		ResultSet rs = mysql.getResult("SELECT * FROM "+Tabellen.Listen_Inhalte.getName()+" WHERE "+Wert.ListenID.getName()+"="+listenid);
 		try {
 			while (rs.next()) {
