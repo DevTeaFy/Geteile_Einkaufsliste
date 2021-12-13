@@ -78,7 +78,7 @@ public class MySQL {
 //			st.executeUpdate("DROP TABLE IF EXISTS User");
 //			st.executeUpdate("DROP TABLE IF EXISTS Gruppen");
 			
-			st.executeUpdate("CREATE TABLE IF NOT EXISTS User_Send_Gruppen_Invite(UserID int NOT NULL, InvitetdUserID int NOT NULL, GruppenID int NOT NULL, FOREIGN KEY (UserID) REFERENCES User (UserID), PRIMARY KEY(UserID))");
+			st.executeUpdate("CREATE TABLE IF NOT EXISTS User_Send_Gruppen_Invite(SendID int NOT NULL AUTO_INCREMENT,UserID int NOT NULL, InvitetdUserID int NOT NULL, GruppenID int NOT NULL, FOREIGN KEY (UserID) REFERENCES User (UserID), PRIMARY KEY(SendID))");
 			st.executeUpdate("CREATE TABLE IF NOT EXISTS User(UserID int UNIQUE NOT NULL AUTO_INCREMENT, Benutzername VARCHAR(50), Nachname VARCHAR(50), Vorname VARCHAR(50), Geburtsdatum Long, Password VARCHAR(50), PRIMARY KEY(UserID), UNIQUE (Benutzername))");
 			st.executeUpdate("CREATE TABLE IF NOT EXISTS Gruppen(GruppenID int NOT NULL AUTO_INCREMENT, GruppenName VARCHAR(50), ErstellerID int, PRIMARY KEY(GruppenID))");
 			st.executeUpdate("CREATE TABLE IF NOT EXISTS U_IN_G(UserID int NOT NULL, GruppenID int NOT NULL, FOREIGN KEY (UserID) REFERENCES User (UserID), FOREIGN KEY (GruppenID) REFERENCES Gruppen (GruppenID),PRIMARY KEY (UserID,GruppenID))");
