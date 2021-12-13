@@ -7,6 +7,8 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -82,6 +84,7 @@ public class LoginScreen {
 	    useridfield.setBackground(PrettyColor.LITHEBLUE);
 	    useridfield.setForeground(PrettyColor.WHITE);
 	    useridfield.setToolTipText("Bitte den Benutzername eingeben");
+	    useridfield.addKeyListener(new KeyListenerByLogin());
 	    cp.add(useridfield);
 	   
 	    lblPasswort.setBounds((int)((frameWidth/2)-(100*1.5)), (useridfield.getBounds().y+useridfield.getBounds().height+abstand), 100, 20);
@@ -93,6 +96,7 @@ public class LoginScreen {
 	    pwfield.setBorder(BorderFactory.createEmptyBorder());
 	    pwfield.setBackground(PrettyColor.LITHEBLUE);
 	    pwfield.setForeground(PrettyColor.WHITE);
+	    pwfield.addKeyListener(new KeyListenerByLogin());
 	    pwfield.setBounds((int)((frameWidth/2)-(25*1.5)), (useridfield.getBounds().y+useridfield.getBounds().height+abstand), 150, 20);
 	    cp.add(pwfield);
 	    
@@ -109,39 +113,10 @@ public class LoginScreen {
 	    btnLogin.setForeground(Color.GREEN);
 	    btnLogin.addActionListener(new ActionListener() {
 			
-			@SuppressWarnings("deprecation")
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(e.getSource() == btnLogin) {
-					if(Utils.debug)
-						System.out.println("------------- Login versuch -------------");
-						
-					if(!Utils.hasInternetConnection()) {
-						JOptionPane.showMessageDialog(cp,"Du hast kein Internet.","Internet",JOptionPane.ERROR_MESSAGE);
-						return;
-					}
-					
-					if(Geteilte_Einkaufsliste.getMySQL().getCon() == null) {
-						JOptionPane.showMessageDialog(cp,"Du hast keine verbindung zur Datenbank","Datenbank",JOptionPane.ERROR_MESSAGE);
-						return;
-					}
-					String pw = pwfield.getText();
-					String datenbankpw = Geteilte_Einkaufsliste.getMySQL().getString("*", Tabellen.User, Wert.Benutzername, useridfield.getText(), Wert.Password);
-					
-					if(pw.equals(datenbankpw)) {
-						Geteilte_Einkaufsliste.setUser(new User(useridfield.getText(), datenbankpw));
-						if(Utils.debug) {
-							System.out.println("Login erfolgreich");
-							System.out.println(Geteilte_Einkaufsliste.getUser().getVorname());
-						}
-						frame.dispose();
-						new MainScreen();
-					}else {
-						System.out.println("Pw falsch!!!");
-					}
-					
-					if(Utils.debug)
-						System.out.println("------------- Login Ende -------------");
+					tryLogin();
 				}
 			}
 		});
@@ -177,6 +152,61 @@ public class LoginScreen {
 	public JFrame getFrame() {
 		return frame;
 	}
+	
+	private void tryLogin() {
+		if(Utils.debug)
+			System.out.println("------------- Login versuch -------------");
+			
+		if(!Utils.hasInternetConnection()) {
+			JOptionPane.showMessageDialog(this.frame,"Du hast kein Internet.","Internet",JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
+		if(Geteilte_Einkaufsliste.getMySQL().getCon() == null) {
+			JOptionPane.showMessageDialog(this.frame,"Du hast keine verbindung zur Datenbank","Datenbank",JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		String pw = pwfield.getText();
+		String datenbankpw = Geteilte_Einkaufsliste.getMySQL().getString("*", Tabellen.User, Wert.Benutzername, useridfield.getText(), Wert.Password);
+		
+		if(pw.equals(datenbankpw)) {
+			Geteilte_Einkaufsliste.setUser(new User(useridfield.getText(), datenbankpw));
+			if(Utils.debug) {
+				System.out.println("Login erfolgreich");
+				System.out.println(Geteilte_Einkaufsliste.getUser().getVorname());
+			}
+			frame.dispose();
+			new MainScreen();
+		}else {
+			System.out.println("Pw falsch!!!");
+		}
+		
+		if(Utils.debug)
+			System.out.println("------------- Login Ende -------------");
+	}
+	
+	private class KeyListenerByLogin implements KeyListener{
 
+		@Override
+		public void keyTyped(KeyEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
 
+		@Override
+		public void keyPressed(KeyEvent e) {
+			if(e.getKeyChar() == KeyEvent.VK_ENTER) {
+				tryLogin();
+			}
+			
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+	
 }
