@@ -162,7 +162,7 @@ public class MainScreen {
 		});
 		cbbListen.setSelectedIndex(0);
 		cp.add(cbbListen);
-	
+		
 		this.lListen.addListSelectionListener(new ListListener(this));
 		this.lListen.setFont(new Font("Comic Sans MS", Font.BOLD, 24));
 		this.lListen.setBackground(PrettyColor.LITHEBLUE);

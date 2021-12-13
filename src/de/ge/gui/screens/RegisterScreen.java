@@ -186,7 +186,7 @@ public class RegisterScreen {
 		
 		
 		
-		btnRegistrieren.setBounds((int)((frameWidth/2)-(130/2)), (tfPasswortw.getBounds().y+tfPasswortw.getBounds().height+(abstand)), 130, 40);
+		btnRegistrieren.setBounds((int)((frameWidth/2)-(130/2)-(115/2)), (tfPasswortw.getBounds().y+tfPasswortw.getBounds().height+(abstand)), 130, 40);
 		btnRegistrieren.setText("Registrieren");
 		btnRegistrieren.setMargin(new Insets(2, 2, 2, 2));
 		btnRegistrieren.setFocusable(false);
@@ -252,9 +252,15 @@ public class RegisterScreen {
 		});
 		cp.add(btnRegistrieren);
 		
-		btnZurück.setBounds((int) ((int)((frameWidth/2)-(115/2))+btnRegistrieren.getBounds().getX()), (lblPasswortwiederholen.getBounds().y+lblPasswortwiederholen.getBounds().height+(abstand)), 115, 33);
+		btnZurück.setBounds((int) ((int)((frameWidth/2)+(115/2/2))), (btnRegistrieren.getBounds().y), 115, 40);
 		btnZurück.setText("Zurück");
 		btnZurück.setMargin(new Insets(2, 2, 2, 2));
+		btnZurück.setFocusable(false);
+		btnZurück.setBorderPainted(false);
+		btnZurück.setContentAreaFilled(false);
+		btnZurück.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
+		btnZurück.setForeground(PrettyColor.GREEN);
+		btnZurück.setBackground(PrettyColor.BLUE);
 		btnZurück.addActionListener(new ActionListener() {
 
 			@Override
@@ -264,9 +270,6 @@ public class RegisterScreen {
 			}
 		
 		});
-		btnZurück.setBackground(PrettyColor.LITHEBLUE);
-		btnZurück.setForeground(PrettyColor.WHITE);
-		btnZurück.setFont(new Font("Comic Sans MS", Font.BOLD, 14));
 		cp.add(btnZurück);
 		
 
