@@ -46,13 +46,14 @@ public class InviteScreen {
 		int x = (d.width - this.frame.getSize().width) / 2;
 		int y = (d.height - this.frame.getSize().height) / 2;
 		this.frame.setLocation(x, y);
-		this.frame.setTitle("einstellungen");
+		this.frame.setTitle("EinladungsScreen");
 		this.frame.setResizable(false);
 		Container cp = this.frame.getContentPane();
+		cp.setBackground(PrettyColor.BLUE);
 		cp.setLayout(null);
 
 		btnGruppeertellen.setBounds(256, 32, 115, 25);
-		btnGruppeertellen.setText("Gruppeertellen");
+		btnGruppeertellen.setText("Gruppeerterstellen");
 		btnGruppeertellen.setMargin(new Insets(2, 2, 2, 2));
 		btnGruppeertellen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {

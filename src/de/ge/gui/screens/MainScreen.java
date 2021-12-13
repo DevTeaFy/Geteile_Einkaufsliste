@@ -157,11 +157,7 @@ public class MainScreen {
 		});
 		cbbListen.setSelectedIndex(0);
 		cp.add(cbbListen);
-		
-		ArrayList<String> listen = u.getListenname();
-		for (int i = 0; i < listen.size(); i++) {
-			listModel.add(i, listen.get(i));
-		}
+	
 		this.lListen.addListSelectionListener(new ListListener(this));
 		this.lListen.setFont(new Font("Comic Sans MS", Font.BOLD, 24));
 		this.lListen.setBackground(PrettyColor.LITHEBLUE);
