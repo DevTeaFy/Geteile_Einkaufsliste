@@ -295,7 +295,16 @@ public class MainScreen {
 		if (e.getSource() == btnHinzufuegen) {
 			if(getlListen().getSelectedValue() != null) {
 				frame.dispose();
-				new ArtikelScreen(getlListen().getSelectedValue().toString(),this);
+				try {
+					ResultSet rs = Geteilte_Einkaufsliste.getMySQL().getResult("SELECT * FROM Einkaufslisten WHERE UserID="+Geteilte_Einkaufsliste.getUser().getiD()+" AND Listenname='"+this.lListen.getSelectedValue().toString()+"'");
+					if(rs.next()) {
+						int listeniD = rs.getInt("ListenID");
+						new ArtikelScreen(listeniD,getlListen().getSelectedValue().toString(),this);
+					}
+				}catch (Exception e1) {
+					if(Utils.debug)
+						e1.printStackTrace();
+				}
 			}else {
 				//Frag ihn ob er eine Liste anlegen möchte :P
 			}

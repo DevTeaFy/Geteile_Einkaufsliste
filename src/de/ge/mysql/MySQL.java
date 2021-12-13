@@ -154,7 +154,7 @@ public class MySQL {
 		}
 	}
 	
-	public void createArtikel(String listenname,String Artikelname,String Bezeichnung,int menge,double preis,String link,String Typ) {
+	public void createArtikel(int listenID,String Artikelname,String Bezeichnung,int menge,double preis,String link,String Typ) {
 		Artikelname = User.QuoteForMySQL(Artikelname);
 		Bezeichnung = User.QuoteForMySQL(Bezeichnung);
 		link = User.QuoteForMySQL(link);
@@ -163,9 +163,8 @@ public class MySQL {
 			Statement st = this.con.createStatement();
 			st.executeUpdate("INSERT INTO Artikel(ArtikelID,ArtikelName,Bezeichnung,Link,Typ,Preis) VALUES (Null,'"+Artikelname+"','"+Bezeichnung+"','"+link+"','"+Typ+"',"+preis+")");
 			
-			int lastid = getInt("*", Tabellen.Einkaufslisten, Wert.Listenname, listenname, Wert.ListenID);
 			int artikelid = getInt("*", Tabellen.Artikel, Wert.ArtikelName, Artikelname, Wert.ArtikelID);
-			st.executeUpdate("INSERT INTO "+Tabellen.Listen_Inhalte.getName()+"(ListenID,ArtikelID,Menge) VALUES ("+lastid+","+artikelid+","+menge+")");
+			st.executeUpdate("INSERT INTO "+Tabellen.Listen_Inhalte.getName()+"(ListenID,ArtikelID,Menge) VALUES ("+listenID+","+artikelid+","+menge+")");
 		} catch (SQLException e) {
 			if(Utils.debug)
 				e.printStackTrace();

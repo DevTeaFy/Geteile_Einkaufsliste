@@ -37,8 +37,10 @@ public class ArtikelScreen {
 	private JButton btnClear = new JButton();
 	private JButton btnZurück = new JButton();
 	private MainScreen mainScreen = null;
+	private int listenid = -1;
 
-	public ArtikelScreen(String name, MainScreen mainscreen) {
+	public ArtikelScreen(int listenid,String name, MainScreen mainscreen) {
+		this.listenid = listenid;
 		this.mainScreen = mainscreen;
 		this.frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		int frameWidth = 600;
@@ -192,7 +194,7 @@ public class ArtikelScreen {
 			double preis = Double.valueOf(tfPreisje1.getText());
 			String link = tfURLLINK.getText();
 
-			Geteilte_Einkaufsliste.getMySQL().createArtikel(this.frame.getTitle().replace("ArtikelScreen -> ", ""), Name, bez, stkz, preis, link, "Typ lost");
+			Geteilte_Einkaufsliste.getMySQL().createArtikel(listenid, Name, bez, stkz, preis, link, "Typ lost");
 			
 		}
 	}
