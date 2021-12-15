@@ -24,6 +24,7 @@ import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
 
+import de.ge.gui.listener.CloseWindowListener;
 import de.ge.gui.listener.FeldFoucosListener;
 import de.ge.main.Geteilte_Einkaufsliste;
 import de.ge.user.User;
@@ -52,6 +53,7 @@ public class RegisterScreen {
 	private JLabel lblGeburtsdatum = new JLabel();
 
 	public RegisterScreen() {
+	    this.frame.addWindowListener(new CloseWindowListener());
 		this.frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		int frameWidth = 365;
 		int frameHeight = 510;

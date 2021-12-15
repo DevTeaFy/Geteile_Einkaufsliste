@@ -19,7 +19,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
-import de.ge.gui.listener.CloseWindowListener;
+import de.ge.gui.listener.OpenWindowListener;
 import de.ge.main.Geteilte_Einkaufsliste;
 import de.ge.user.User;
 import de.ge.utils.PrettyColor;
@@ -49,7 +49,7 @@ public class LoginScreen {
 	
 	private void createScreen() {
 		this.frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-	    this.frame.addWindowListener(new CloseWindowListener());
+	    this.frame.addWindowListener(new OpenWindowListener(this));
 	    int frameWidth = 400; 
 	    int frameHeight = 250;
 	    this.frame.setSize(frameWidth, frameHeight);

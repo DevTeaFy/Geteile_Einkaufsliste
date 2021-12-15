@@ -173,8 +173,8 @@ public class User {
 		listenname = listenname.replace("]", "\\" + "]");
 		listenname = listenname.replace("(", "\\" + "(");
 		listenname = listenname.replace(")", "\\" + ")");
-		ResultSet rs = mysql.getResult("SELECT * FROM Einkaufslisten WHERE " + Wert.Listenname.getName() + "='"
-				+ listenname + "' AND UserID=" + this.iD);
+		ResultSet rs = mysql.getResult("SELECT * FROM "+Tabellen.Einkaufslisten.getName()+" WHERE " + Wert.Listenname.getName() + "='"
+				+ listenname + "' AND "+Wert.UserID.getName()+"=" + this.iD);
 		try {
 			if (rs.next()) {
 				return true;
@@ -204,7 +204,7 @@ public class User {
 		listenname = QuoteForMySQL(listenname);
 		try {
 			Statement st = mysql.getCon().createStatement();
-			st.executeUpdate("INSERT INTO Einkaufslisten(ListenID, GruppenID, UserID, Listenname) VALUES (Null,-1,"
+			st.executeUpdate("INSERT INTO "+Tabellen.Einkaufslisten.getName()+"(ListenID, GruppenID, UserID, Listenname) VALUES (Null,-1,"
 					+ this.iD + ",'" + listenname + "')");
 
 			int lastid = mysql.getInt("*", Tabellen.Einkaufslisten, Wert.Listenname, listenname, Wert.ListenID);
@@ -239,7 +239,7 @@ public class User {
 		Gruppenname = QuoteForMySQL(Gruppenname);
 		try {
 			ResultSet rs = mysql
-					.getResult("SELECT * FROM Gruppen WHERE " + Wert.GruppenName.getName() + "='" + Gruppenname + "'");
+					.getResult("SELECT * FROM "+Tabellen.Gruppen.getName()+" WHERE " + Wert.GruppenName.getName() + "='" + Gruppenname + "'");
 			boolean isok = true;
 			if (rs.next()) {
 				while (rs.next()) {
@@ -261,10 +261,10 @@ public class User {
 				try {
 					Statement st = mysql.getCon().createStatement();
 					st.executeUpdate("INSERT INTO Gruppen(GruppenID, GruppenName, ErstellerID) VALUES (Null,'"+Gruppenname+"','"+this.iD+"')");
-					ResultSet rs1 = mysql.getResult("SELECT * FROM Gruppe ORDER BY GruppenID DESC LIMIT 1");
+					ResultSet rs1 = mysql.getResult("SELECT * FROM Gruppen ORDER BY GruppenID DESC LIMIT 1");
 					int toreturn = -1;
 					if(rs1.next()) {
-						toreturn = rs.getInt("GruppenID");
+						toreturn = rs1.getInt("GruppenID");
 					}
 					st.executeUpdate("INSERT INTO U_IN_G(UserID, GruppenID) VALUE ("+this.iD+","+toreturn+")");
 

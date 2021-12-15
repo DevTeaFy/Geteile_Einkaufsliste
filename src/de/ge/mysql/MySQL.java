@@ -8,9 +8,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
 
-import javax.swing.JOptionPane;
-
-import de.ge.main.Geteilte_Einkaufsliste;
 import de.ge.user.User;
 import de.ge.utils.Tabellen;
 import de.ge.utils.Utils;

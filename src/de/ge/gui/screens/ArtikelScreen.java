@@ -15,6 +15,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 
+import de.ge.gui.listener.CloseWindowListener;
+import de.ge.gui.listener.OpenWindowListener;
 import de.ge.main.Geteilte_Einkaufsliste;
 import de.ge.utils.PrettyColor;
 
@@ -43,6 +45,7 @@ public class ArtikelScreen {
 		this.listenid = listenid;
 		this.mainScreen = mainscreen;
 		this.frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+	    this.frame.addWindowListener(new CloseWindowListener());
 		int frameWidth = 600;
 		int frameHeight = 300;
 		this.frame.setSize(frameWidth, frameHeight);

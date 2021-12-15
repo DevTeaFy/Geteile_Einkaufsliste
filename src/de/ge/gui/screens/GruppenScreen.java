@@ -16,6 +16,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.WindowConstants;
 
+import de.ge.gui.listener.CloseWindowListener;
 import de.ge.main.Geteilte_Einkaufsliste;
 import de.ge.utils.PrettyColor;
 import de.ge.utils.Tabellen;
@@ -36,6 +37,7 @@ public class GruppenScreen {
 	public GruppenScreen(int Gruppenid,String Gruppenname) {
 		this.Gruppenname = Gruppenname;
 		this.frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+	    this.frame.addWindowListener(new CloseWindowListener());
 		this.frame.setBackground(PrettyColor.LITHEBLUE);
 		this.frame.setForeground(PrettyColor.WHITE);
 		this.frame.setFont(new Font("Comic Sans MS", Font.BOLD, 14));

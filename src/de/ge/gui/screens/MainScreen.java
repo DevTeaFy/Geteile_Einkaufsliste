@@ -33,12 +33,15 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.table.DefaultTableModel;
 
+import de.ge.gui.listener.CloseWindowListener;
 import de.ge.gui.listener.ListListener;
 import de.ge.main.Geteilte_Einkaufsliste;
 import de.ge.mysql.MySQL;
 import de.ge.user.User;
 import de.ge.utils.PrettyColor;
+import de.ge.utils.Tabellen;
 import de.ge.utils.Utils;
+import de.ge.utils.Wert;
 
 public class MainScreen {
 
@@ -65,6 +68,7 @@ public class MainScreen {
 	@SuppressWarnings("unchecked")
 	public MainScreen() {
 
+	    this.frame.addWindowListener(new CloseWindowListener());
 		this.frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		int frameWidth = 948;
 		int frameHeight = 647;
@@ -127,6 +131,7 @@ public class MainScreen {
 				ArrayList<String> gruppenlisten = u.getGruppenListenname();
 				switch (toswitch) {
 				case "Eigenelisten":
+						btnGruppenScreen.setVisible(false);
 						for(int i = listModel.getSize();i > 0;i--) {
 							listModel.remove(i-1);
 						}
@@ -135,6 +140,7 @@ public class MainScreen {
 						}
 					break;
 				case "Gruppenlisten":
+					btnGruppenScreen.setVisible(true);
 					for(int i = listModel.getSize();i > 0;i--) {
 						listModel.remove(i-1);
 					}
@@ -143,6 +149,7 @@ public class MainScreen {
 					}
 					break;
 				case "Eigenelisten & Gruppenlisten":
+					btnGruppenScreen.setVisible(true);
 					for(int i = listModel.getSize();i > 0;i--) {
 					listModel.remove(i-1);
 					}	
@@ -271,6 +278,7 @@ public class MainScreen {
 		btnGruppenScreen.setBackground(PrettyColor.LITHEBLUE);
 		btnGruppenScreen.setForeground(PrettyColor.WHITE);
 		btnGruppenScreen.setFont(new Font("Comic Sans MS", Font.BOLD, 14));
+		btnGruppenScreen.setVisible(false);
 		cp.add(btnGruppenScreen);
 		
 		
@@ -292,6 +300,7 @@ public class MainScreen {
 	public JTable getjTable1() {
 		return jTable;
 	}
+	
 	public void setjTable1(JTable jTable1) {
 		this.jTable = jTable1;
 	}
@@ -311,9 +320,9 @@ public class MainScreen {
 			if(getlListen().getSelectedValue() != null) {
 				frame.dispose();
 				try {
-					ResultSet rs = Geteilte_Einkaufsliste.getMySQL().getResult("SELECT * FROM Einkaufslisten WHERE UserID="+Geteilte_Einkaufsliste.getUser().getiD()+" AND Listenname='"+this.lListen.getSelectedValue().toString()+"'");
+					ResultSet rs = Geteilte_Einkaufsliste.getMySQL().getResult("SELECT * FROM "+Tabellen.Einkaufslisten.getName()+" WHERE "+Wert.UserID.getName()+"="+Geteilte_Einkaufsliste.getUser().getiD()+" AND "+Wert.Listenname.getName()+"='"+this.lListen.getSelectedValue().toString()+"'");
 					if(rs.next()) {
-						int listeniD = rs.getInt("ListenID");
+						int listeniD = rs.getInt(Wert.ListenID.getName());
 						new ArtikelScreen(listeniD,getlListen().getSelectedValue().toString(),this);
 					}
 				}catch (Exception e1) {
@@ -385,9 +394,9 @@ public class MainScreen {
 	public void btnOefnnen_ActionPerformed(ActionEvent e) {
 		if (e.getSource() == btnOefnnen) {
 			try {
-				ResultSet rs = Geteilte_Einkaufsliste.getMySQL().getResult("SELECT * FROM Einkaufslisten WHERE UserID="+Geteilte_Einkaufsliste.getUser().getiD()+" AND Listenname='"+this.lListen.getSelectedValue().toString()+"'");
+				ResultSet rs = Geteilte_Einkaufsliste.getMySQL().getResult("SELECT * FROM "+Tabellen.Einkaufslisten.getName()+" WHERE "+Wert.UserID.getName()+"="+Geteilte_Einkaufsliste.getUser().getiD()+" AND "+Wert.Listenname.getName()+"='"+this.lListen.getSelectedValue().toString()+"'");
 				if(rs.next()) {
-					ListListener.setArtikelOutOfListInTabel(rs.getInt("ListenID"));
+					ListListener.setArtikelOutOfListInTabel(rs.getInt(Wert.ListenID.getName()));
 				}
 			} catch (SQLException e1) {
 				if(Utils.debug)
@@ -402,8 +411,15 @@ public class MainScreen {
 			this.frame.dispose();
 			if(getlListen().getSelectedValue() == null) {
 				String gruppenname = JOptionPane.showInputDialog(this.frame, "Gruppenname:", "Gruppe - Erstellen", JOptionPane.PLAIN_MESSAGE);
+				System.out.println(gruppenname);
 				String gruppenlistenname = JOptionPane.showInputDialog(this.frame, "Einkaufslistenname:", "Gruppen - Einkaufsliste - Erstellen", JOptionPane.PLAIN_MESSAGE);
+				System.out.println(gruppenlistenname);
 				if(gruppenname == null || gruppenlistenname == null) {
+					new MainScreen();
+					return;
+				}
+				if(gruppenlistenname.equals("") || gruppenname.equals("")) {
+					new MainScreen();
 					return;
 				}
 				int id = Geteilte_Einkaufsliste.getUser().createGruppe(gruppenname); 
@@ -415,10 +431,10 @@ public class MainScreen {
 				}
 			}else {
 				String listenname = getlListen().getSelectedValue().toString();
-				ResultSet rs = Geteilte_Einkaufsliste.getMySQL().getResult("SELECT * FROM Einkaufslisten WHERE UserID="+Geteilte_Einkaufsliste.getUser().getiD()+" AND Listenname='"+this.lListen.getSelectedValue().toString()+"'");
+				ResultSet rs = Geteilte_Einkaufsliste.getMySQL().getResult("SELECT * FROM "+Tabellen.Einkaufslisten.getName()+" WHERE "+Wert.UserID.getName()+"="+Geteilte_Einkaufsliste.getUser().getiD()+" AND "+Wert.Listenname.getName()+"='"+this.lListen.getSelectedValue().toString()+"'");
 				try {
 					if(rs.next()) {
-						int gruppenID = rs.getInt("GruppenID");
+						int gruppenID = rs.getInt(Wert.GruppenID.getName());
 						new GruppenScreen(gruppenID,listenname);
 					}
 				} catch (SQLException e1) {

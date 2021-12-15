@@ -19,6 +19,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.WindowConstants;
 
+import de.ge.gui.listener.CloseWindowListener;
 import de.ge.main.Geteilte_Einkaufsliste;
 import de.ge.utils.PrettyColor;
 
@@ -40,6 +41,7 @@ public class InviteScreen {
 
 	public InviteScreen() {
 		this.frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+	    this.frame.addWindowListener(new CloseWindowListener());
 		int frameWidth = 430;
 		int frameHeight = 440;
 		this.frame.setSize(frameWidth, frameHeight);
