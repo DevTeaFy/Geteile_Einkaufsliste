@@ -6,6 +6,7 @@ import java.awt.event.WindowListener;
 
 import de.ge.gui.screens.LoginScreen;
 import de.ge.main.Geteilte_Einkaufsliste;
+import de.ge.user.User;
 import de.ge.utils.Utils;
 
 public class OpenWindowListener implements WindowListener {
@@ -53,7 +54,7 @@ public class OpenWindowListener implements WindowListener {
 			Geteilte_Einkaufsliste.getMySQL().connectMySQL();
 			ls.getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 			if(Utils.debug)
-				Geteilte_Einkaufsliste.getMySQL().listIDS();
+				User.listIDS();
 		}
 	}
 

@@ -37,7 +37,7 @@ public class FeldFoucosListener implements FocusListener{
 			
 			if(Utils.debug) {System.out.println("Benutzername Feld verlassen check ob name exestiert!");}
 			
-			if(Geteilte_Einkaufsliste.getUser().benutzerNameExists(rs.getTfBenutzerName().getText())) {
+			if(User.benutzerNameExists(rs.getTfBenutzerName().getText())) {
 				rs.getTfBenutzerName().setBackground(PrettyColor.RED);
 				
 				if(Utils.debug) {System.out.println("Benutzername "+rs.getTfBenutzerName().getText()+" existiert bereits.");}

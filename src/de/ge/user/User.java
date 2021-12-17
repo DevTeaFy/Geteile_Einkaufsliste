@@ -23,6 +23,9 @@ public class User {
 	private String Nachname;
 	private String vorname;
 	private String passwort;
+	private HashMap<String, Integer> listenid = new HashMap<>();
+	private HashMap<String, Integer> gruppenlistenid = new HashMap<>();
+	private HashMap<String, Integer> gruppenid = new HashMap<>();
 
 	private MySQL mysql = Geteilte_Einkaufsliste.getMySQL();
 
@@ -38,6 +41,9 @@ public class User {
 			this.vorname = mysql.getString("*", Tabellen.User, Wert.Benutzername, benutzername, Wert.Vorname);
 			this.passwort = pw;
 			this.Benutzername = benutzername;
+			this.gruppenid = getGruppenNameHashMap();
+			this.gruppenlistenid = getGruppenListenname();
+			this.listenid = getListenname();
 			return this;
 		} else {
 			System.out.println("Pw falsch!!!");
@@ -45,6 +51,31 @@ public class User {
 		}
 	}
 
+	public int getGruppenIDByName(String GruppenName) {
+		if(gruppenid.containsKey(GruppenName)) {
+			return gruppenid.get(GruppenName);
+		}else {
+			return -1;
+		}
+	}
+	
+	public int getListenIDByName(String Listenname) {
+		if(listenid.containsKey(Listenname)) {
+			return listenid.get(Listenname);
+		}else {
+			return -1;
+		}
+	}
+	
+	public int getGruppenListenIDByName(String Listenname) {
+		if(gruppenlistenid.containsKey(Listenname)) {
+			return gruppenlistenid.get(Listenname);
+		}else {
+			return -1;
+		}
+	}
+	
+	
 	public void inviteInGruppe(int UserIDToInvite, int GruppenID) {
 		try {
 			ResultSet invites1 = mysql.getResult("SELECT * FROM " + Tabellen.User_Send_Gruppen_Invite.getName()
@@ -110,7 +141,7 @@ public class User {
 
 	}
 
-	public ArrayList<String> getListenname(){
+	public ArrayList<String> getListennameAsArrayList(){
 		ArrayList<Integer> idliste = new ArrayList<>();
 		ArrayList<String> nameliste = new ArrayList<>();
 		try {
@@ -129,7 +160,7 @@ public class User {
 			return null;
 		}
 	}
-	public ArrayList<String> getGruppenListenname(){
+	public ArrayList<String> getGruppenListennameAsArrayList(){
 		ArrayList<Integer> gruppenidliste = getGruppenIDs();
 		ArrayList<String> nameliste = new ArrayList<>();
 		ArrayList<Integer> listederlistenids = new ArrayList<>();
@@ -142,11 +173,44 @@ public class User {
 		return nameliste;
 	}
 	
-	public ArrayList<String> getGruppenName(){
+	private HashMap<String,Integer> getListenname(){
+		ArrayList<Integer> idliste = new ArrayList<>();
+		HashMap<String,Integer> nameliste = new HashMap<>();
+		try {
+			ResultSet rs = mysql.getResult("SELECT * FROM "+Tabellen.User_hat_listen.getName()+" WHERE "+Wert.UserID.getName()+"="+this.iD);
+			while (rs.next()) {
+				idliste.add(rs.getInt(Wert.ListenID.getName()));
+			}
+			for (int i = 0; i < idliste.size(); i++) {
+				nameliste.put(mysql.getString("*", Tabellen.Einkaufslisten, Wert.ListenID, idliste.get(i), Wert.Listenname),idliste.get(i));
+			}
+			return nameliste;
+		} catch (SQLException e) {
+			if(Utils.debug)
+				e.printStackTrace();
+			
+			return null;
+		}
+	}
+	private HashMap<String,Integer> getGruppenListenname(){
 		ArrayList<Integer> gruppenidliste = getGruppenIDs();
-		ArrayList<String> nameliste = new ArrayList<>();
+		HashMap<String,Integer> nameliste = new HashMap<>();
+		ArrayList<Integer> listederlistenids = new ArrayList<>();
 		for (int i = 0; i < gruppenidliste.size(); i++) {
-			nameliste.add(mysql.getString("*", Tabellen.Gruppen, Wert.GruppenID, gruppenidliste.get(i), Wert.GruppenName));
+			listederlistenids.add(mysql.getInt("*", Tabellen.Gruppe_hat_listen, Wert.GruppenID, gruppenidliste.get(i), Wert.ListenID));
+		}
+		for (int i = 0; i < listederlistenids.size(); i++) {
+			nameliste.put(mysql.getString("*", Tabellen.Einkaufslisten, Wert.ListenID, listederlistenids.get(i), Wert.Listenname),listederlistenids.get(i));
+		}
+		return nameliste;
+	}
+	
+	private HashMap<String,Integer> getGruppenNameHashMap(){
+		ArrayList<Integer> gruppenidliste = getGruppenIDs();
+		HashMap<String,Integer> nameliste = new HashMap<>();
+		for (int i = 0; i < gruppenidliste.size(); i++) {
+			String gruppenName =mysql.getString("*", Tabellen.Gruppen, Wert.GruppenID, gruppenidliste.get(i), Wert.GruppenName);
+			nameliste.put(gruppenName,gruppenidliste.get(i));
 		}
 		return nameliste;
 	}
@@ -203,36 +267,48 @@ public class User {
 
 	public void createEinkaufsliste(String listenname) {
 		listenname = QuoteForMySQL(listenname);
+		if(listenid.containsKey(listenname)) {
+			System.out.println("Die einkaufsliste Existiert beretis.");
+			return;
+		}else {
 		try {
 			Statement st = mysql.getCon().createStatement();
 			st.executeUpdate("INSERT INTO "+Tabellen.Einkaufslisten.getName()+"(ListenID, GruppenID, UserID, Listenname) VALUES (Null,-1,"
 					+ this.iD + ",'" + listenname + "')");
 
 			int lastid = mysql.getInt("*", Tabellen.Einkaufslisten, Wert.Listenname, listenname, Wert.ListenID);
+			listenid.put(listenname, lastid);
 			st.executeUpdate("INSERT INTO " + Tabellen.User_hat_listen.getName() + "(UserID, ListenID) VALUES ("
 					+ this.iD + "," + lastid + ")");
 		} catch (SQLException e) {
 			if (Utils.debug)
 				e.printStackTrace();
 		}
+		}
 	}
 
 	public void createGruppenEinkaufsliste(String Gruppenlistenname, int GruppenID) {
 		Gruppenlistenname = QuoteForMySQL(Gruppenlistenname);
-		try {
-			Statement st = mysql.getCon().createStatement();
-			st.executeUpdate("INSERT INTO Einkaufslisten(ListenID, GruppenID, UserID, Listenname) VALUES (Null,"
-					+ GruppenID + "," + this.iD + ",'" + Gruppenlistenname + "')");
-			ResultSet rs = mysql.getResult("SELECT * FROM Einkaufslisten ORDER BY ListenID DESC LIMIT 1");
-			if (rs.next()) {
-				int listenid = rs.getInt("ListenID");
-				Statement st2 = mysql.getCon().createStatement();
-				st2.executeUpdate("INSERT INTO Gruppe_hat_listen(GruppenID,ListenID) VALUES (" + GruppenID + ","
-						+ listenid + ")");
+		if(gruppenlistenid.containsKey(Gruppenlistenname)) {
+			System.out.println("Gruppeneinkaufsliste gibt es schon.");
+			return;
+		}else {
+			try {
+				Statement st = mysql.getCon().createStatement();
+				st.executeUpdate("INSERT INTO Einkaufslisten(ListenID, GruppenID, UserID, Listenname) VALUES (Null,"
+						+ GruppenID + "," + this.iD + ",'" + Gruppenlistenname + "')");
+				ResultSet rs = mysql.getResult("SELECT * FROM Einkaufslisten ORDER BY ListenID DESC LIMIT 1");
+				if (rs.next()) {
+					int listenid = rs.getInt("ListenID");
+					Statement st2 = mysql.getCon().createStatement();
+					gruppenlistenid.put(Gruppenlistenname, listenid);
+					st2.executeUpdate("INSERT INTO Gruppe_hat_listen(GruppenID,ListenID) VALUES (" + GruppenID + ","
+							+ listenid + ")");
+				}
+			} catch (SQLException e) {
+				if (Utils.debug)
+					e.printStackTrace();
 			}
-		} catch (SQLException e) {
-			if (Utils.debug)
-				e.printStackTrace();
 		}
 	}
 
@@ -267,8 +343,8 @@ public class User {
 					if(rs1.next()) {
 						toreturn = rs1.getInt("GruppenID");
 					}
+					gruppenid.put(Gruppenname, toreturn);
 					st.executeUpdate("INSERT INTO U_IN_G(UserID, GruppenID) VALUE ("+this.iD+","+toreturn+")");
-
 					return toreturn;
 				} catch (SQLException e) {
 					if (Utils.debug)
@@ -350,7 +426,7 @@ public class User {
 			return false;
 		}
 	}
-	public boolean benutzerNameExists(String benutzername) {
+	public static boolean benutzerNameExists(String benutzername) {
 		benutzername = User.QuoteForMySQL(benutzername);
 		ResultSet rs = Geteilte_Einkaufsliste.getMySQL().getResult("SELECT * FROM User WHERE "+Wert.Benutzername.getName()+"='"+benutzername+"'");
 		try {

@@ -127,8 +127,8 @@ public class MainScreen {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String toswitch = cbbListen.getSelectedItem().toString();
-				ArrayList<String> listen = u.getListenname();
-				ArrayList<String> gruppenlisten = u.getGruppenListenname();
+				ArrayList<String> listen = u.getListennameAsArrayList();
+				ArrayList<String> gruppenlisten = u.getGruppenListennameAsArrayList();
 				switch (toswitch) {
 				case "Eigenelisten":
 						btnGruppenScreen.setVisible(false);

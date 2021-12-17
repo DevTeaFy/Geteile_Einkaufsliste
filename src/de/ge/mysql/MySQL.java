@@ -83,6 +83,19 @@ public class MySQL {
 			st.executeUpdate("CREATE TABLE IF NOT EXISTS Gruppe_hat_listen(GruppenID integer NOT NULL,ListenID integer NOT NULL,FOREIGN KEY (GruppenID) REFERENCES Gruppen (GruppenID),FOREIGN KEY (ListenID) REFERENCES Einkaufslisten (ListenID),PRIMARY KEY (GruppenID,ListenID))");
 			st.executeUpdate("CREATE TABLE IF NOT EXISTS Artikel(ArtikelID integer NOT NULL AUTO_INCREMENT,ArtikelName varchar(255),Bezeichnung TEXT,Link TEXT,Typ varchar(100), Preis DOUBLE, PRIMARY KEY (ArtikelID))");
 			st.executeUpdate("CREATE TABLE IF NOT EXISTS Listen_Inhalte(ListenID integer NOT NULL,ArtikelID integer NOT NULL, Menge integer NOT NULL, FOREIGN KEY (ListenID) REFERENCES Einkaufslisten (ListenID), FOREIGN KEY (ArtikelID) REFERENCES Artikel (ArtikelID), PRIMARY KEY (ListenID,ArtikelID))");
+			
+//			st.executeUpdate("CREATE TABLE IF NOT EXISTS User_Send_Gruppen_Invite(SendID int NOT NULL AUTO_INCREMENT,UserID int NOT NULL, InvitetdUserID int NOT NULL, GruppenID int NOT NULL, PRIMARY KEY(SendID))");
+//			st.executeUpdate("CREATE TABLE IF NOT EXISTS User(UserID int UNIQUE NOT NULL AUTO_INCREMENT, Benutzername VARCHAR(50), Nachname VARCHAR(50), Vorname VARCHAR(50), Geburtsdatum Long, Password VARCHAR(50), PRIMARY KEY(UserID), UNIQUE (Benutzername))");
+//			st.executeUpdate("CREATE TABLE IF NOT EXISTS Gruppen(GruppenID int NOT NULL AUTO_INCREMENT, GruppenName VARCHAR(50), ErstellerID int, PRIMARY KEY(GruppenID))");
+//			st.executeUpdate("CREATE TABLE IF NOT EXISTS U_IN_G(UserID int NOT NULL, GruppenID int NOT NULL, PRIMARY KEY (UserID,GruppenID))");
+//			st.executeUpdate("CREATE TABLE IF NOT EXISTS Einkaufslisten(ListenID int NOT NULL AUTO_INCREMENT, GruppenID int NOT NULL, UserID int NOT NULL, Listenname VARCHAR(50),PRIMARY KEY (ListenID))");
+//			st.executeUpdate("CREATE TABLE IF NOT EXISTS User_hat_listen(UserID integer NOT NULL,ListenID integer NOT NULL, PRIMARY KEY (UserID,ListenID))");
+//			st.executeUpdate("CREATE TABLE IF NOT EXISTS Gruppe_hat_listen(GruppenID integer NOT NULL,ListenID integer NOT NULL, PRIMARY KEY (GruppenID,ListenID))");
+//			st.executeUpdate("CREATE TABLE IF NOT EXISTS Artikel(ArtikelID integer NOT NULL AUTO_INCREMENT,ArtikelName varchar(255),Bezeichnung TEXT,Link TEXT,Typ varchar(100), Preis DOUBLE, PRIMARY KEY (ArtikelID))");
+//			st.executeUpdate("CREATE TABLE IF NOT EXISTS Listen_Inhalte(ListenID integer NOT NULL,ArtikelID integer NOT NULL, Menge integer NOT NULL, PRIMARY KEY (ListenID,ArtikelID))");
+			
+			
+			
 			if(Utils.debug)
 				System.out.println("Tabels erfolgreich angelegt oder noch existent");
 		} catch (SQLException e) {
