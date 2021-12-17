@@ -236,7 +236,7 @@ public class RegisterScreen {
 						return;
 					}
 					
-					if(Geteilte_Einkaufsliste.getMySQL().benutzerNameExists(tfBenutzerName.getText())) {
+					if(Geteilte_Einkaufsliste.getUser().benutzerNameExists(tfBenutzerName.getText())) {
 						tfBenutzerName.setBackground(PrettyColor.RED);
 						if(Utils.debug)System.out.println("Der Benutzername: "+tfBenutzerName.getText()+" ist Vergeben!");
 						return;

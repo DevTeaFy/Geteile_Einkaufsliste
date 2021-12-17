@@ -18,6 +18,7 @@ import javax.swing.WindowConstants;
 import de.ge.gui.listener.CloseWindowListener;
 import de.ge.gui.listener.OpenWindowListener;
 import de.ge.main.Geteilte_Einkaufsliste;
+import de.ge.user.User;
 import de.ge.utils.PrettyColor;
 
 public class ArtikelScreen {
@@ -197,7 +198,7 @@ public class ArtikelScreen {
 			double preis = Double.valueOf(tfPreisje1.getText());
 			String link = tfURLLINK.getText();
 
-			Geteilte_Einkaufsliste.getMySQL().createArtikel(listenid, Name, bez, stkz, preis, link, "Typ lost");
+			Geteilte_Einkaufsliste.getUser().createArtikel(listenid, Name, bez, stkz, preis, link, "Typ lost");
 			
 		}
 	}

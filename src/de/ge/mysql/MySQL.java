@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Date;
 
 import de.ge.user.User;
 import de.ge.utils.Tabellen;
@@ -94,10 +93,6 @@ public class MySQL {
 		}
 	}
 	
-	
-	
-	
-	
 	public String getString(String SelectWerte,Tabellen Tabelle,Wert Where,Object Value,Wert rueckgabewert) {
 		try {
 			ResultSet rs = getResult("SELECT "+SelectWerte+" FROM "+Tabelle.getName()+" WHERE "+Where.getName()+"='"+Value+"'");
@@ -151,75 +146,6 @@ public class MySQL {
 		}
 	}
 	
-	public void createArtikel(int listenID,String Artikelname,String Bezeichnung,int menge,double preis,String link,String Typ) {
-		Artikelname = User.QuoteForMySQL(Artikelname);
-		Bezeichnung = User.QuoteForMySQL(Bezeichnung);
-		link = User.QuoteForMySQL(link);
-		Typ = User.QuoteForMySQL(Typ);
-		try {
-			Statement st = this.con.createStatement();
-			st.executeUpdate("INSERT INTO Artikel(ArtikelID,ArtikelName,Bezeichnung,Link,Typ,Preis) VALUES (Null,'"+Artikelname+"','"+Bezeichnung+"','"+link+"','"+Typ+"',"+preis+")");
-			
-			int artikelid = getInt("*", Tabellen.Artikel, Wert.ArtikelName, Artikelname, Wert.ArtikelID);
-			st.executeUpdate("INSERT INTO "+Tabellen.Listen_Inhalte.getName()+"(ListenID,ArtikelID,Menge) VALUES ("+listenID+","+artikelid+","+menge+")");
-		} catch (SQLException e) {
-			if(Utils.debug)
-				e.printStackTrace();
-		}
-	}
-	
-	
-	public boolean userIDExists(int ID) {
-		ResultSet rs = getResult("SELECT * FROM User WHERE "+Wert.UserID.getName()+"="+ID);
-		try {
-			if(rs.next()) {
-				return true;
-			}else {
-				return false;
-			}
-		} catch (SQLException e) {
-			if(Utils.debug)
-				e.printStackTrace();
-			return false;
-		}
-	}
-	public boolean benutzerNameExists(String benutzername) {
-		benutzername = User.QuoteForMySQL(benutzername);
-		ResultSet rs = getResult("SELECT * FROM User WHERE "+Wert.Benutzername.getName()+"='"+benutzername+"'");
-		try {
-			if(rs.next()) {
-				return true;
-			}else {
-				return false;
-			}
-		} catch (SQLException e) {
-			if(Utils.debug)
-				e.printStackTrace();
-			
-			return false;
-		}
-	}
-	
-	@SuppressWarnings("deprecation")
-	public void listIDS() {
-		ResultSet rs = getResult("SELECT * FROM User");
-		try {
-			System.out.println("-------- User ---------");
-			while (rs.next()) {
-				System.out.println(""+rs.getInt("UserID")+" -> "+rs.getString("Benutzername")+" "+String.valueOf(new Date(rs.getLong("Geburtsdatum")).toLocaleString())+"| -> Nachname: "+ rs.getString("Nachname")+" Vorname: "+ rs.getString("Vorname"));
-				
-			}
-			System.out.println("-------- User ---------");
-		} catch (SQLException e) {
-			if(Utils.debug)
-				e.printStackTrace();
-			
-			return;
-		}
-	}
-	
-	
-	
 	public void update(String query) {
 		PreparedStatement ps = null;
 		try {
@@ -251,9 +177,6 @@ public class MySQL {
 		}
 		return null;
 	}
-	
-	
-
 	
 	public String getUsername() {
 		return username;

@@ -18,6 +18,7 @@ import javax.swing.WindowConstants;
 
 import de.ge.gui.listener.CloseWindowListener;
 import de.ge.main.Geteilte_Einkaufsliste;
+import de.ge.user.User;
 import de.ge.utils.PrettyColor;
 import de.ge.utils.Tabellen;
 import de.ge.utils.Utils;
@@ -119,7 +120,7 @@ public class GruppenScreen {
 			System.out.println("Benutzername: War Null ABBRUCH!!!");
 			return;
 		}
-		if(Geteilte_Einkaufsliste.getMySQL().benutzerNameExists(benutzernametoinvite)) {
+		if(Geteilte_Einkaufsliste.getUser().benutzerNameExists(benutzernametoinvite)) {
 			int id = Geteilte_Einkaufsliste.getMySQL().getInt("*", Tabellen.User, Wert.Benutzername, benutzernametoinvite, Wert.UserID);
 			int gruppenid = -1;
 			try {

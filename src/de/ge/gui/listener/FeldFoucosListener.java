@@ -5,6 +5,7 @@ import java.awt.event.FocusListener;
 
 import de.ge.gui.screens.RegisterScreen;
 import de.ge.main.Geteilte_Einkaufsliste;
+import de.ge.user.User;
 import de.ge.utils.PrettyColor;
 import de.ge.utils.Utils;
 
@@ -36,7 +37,7 @@ public class FeldFoucosListener implements FocusListener{
 			
 			if(Utils.debug) {System.out.println("Benutzername Feld verlassen check ob name exestiert!");}
 			
-			if(Geteilte_Einkaufsliste.getMySQL().benutzerNameExists(rs.getTfBenutzerName().getText())) {
+			if(Geteilte_Einkaufsliste.getUser().benutzerNameExists(rs.getTfBenutzerName().getText())) {
 				rs.getTfBenutzerName().setBackground(PrettyColor.RED);
 				
 				if(Utils.debug) {System.out.println("Benutzername "+rs.getTfBenutzerName().getText()+" existiert bereits.");}

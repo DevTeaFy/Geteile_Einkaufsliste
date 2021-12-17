@@ -1,5 +1,6 @@
 package de.ge.user;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -295,7 +296,7 @@ public class User {
 			id = new Random().nextInt(999999);
 		} while (id < 99999);
 
-		if (!mysql.userIDExists(id)) {
+		if (!User.userIDExists(id)) {
 			if (Utils.debug) {
 				System.out.println("First Try Neue ID");
 			}
@@ -306,7 +307,7 @@ public class User {
 				do {
 					id = new Random().nextInt(999999);
 				} while (id < 99999);
-			} while (mysql.userIDExists(id));
+			} while (User.userIDExists(id));
 			if (Utils.debug) {
 				System.out.println("Secound Try Neue ID");
 			}
@@ -314,7 +315,74 @@ public class User {
 					+ ",'" + Benutzername + "','" + name + "','" + vorname + "','" + geburtsdatum + "','" + pw + "')");
 
 		}
-		mysql.listIDS();
+		listIDS();
+	}
+	
+	public void createArtikel(int listenID,String Artikelname,String Bezeichnung,int menge,double preis,String link,String Typ) {
+		Artikelname = User.QuoteForMySQL(Artikelname);
+		Bezeichnung = User.QuoteForMySQL(Bezeichnung);
+		link = User.QuoteForMySQL(link);
+		Typ = User.QuoteForMySQL(Typ);
+		try {
+			Statement st = mysql.getCon().createStatement();
+			st.executeUpdate("INSERT INTO Artikel(ArtikelID,ArtikelName,Bezeichnung,Link,Typ,Preis) VALUES (Null,'"+Artikelname+"','"+Bezeichnung+"','"+link+"','"+Typ+"',"+preis+")");
+			
+			int artikelid = mysql.getInt("*", Tabellen.Artikel, Wert.ArtikelName, Artikelname, Wert.ArtikelID);
+			st.executeUpdate("INSERT INTO "+Tabellen.Listen_Inhalte.getName()+"(ListenID,ArtikelID,Menge) VALUES ("+listenID+","+artikelid+","+menge+")");
+		} catch (SQLException e) {
+			if(Utils.debug)
+				e.printStackTrace();
+		}
+	}
+	
+	
+	public static boolean userIDExists(int ID) {
+		ResultSet rs = Geteilte_Einkaufsliste.getMySQL().getResult("SELECT * FROM User WHERE "+Wert.UserID.getName()+"="+ID);
+		try {
+			if(rs.next()) {
+				return true;
+			}else {
+				return false;
+			}
+		} catch (SQLException e) {
+			if(Utils.debug)
+				e.printStackTrace();
+			return false;
+		}
+	}
+	public boolean benutzerNameExists(String benutzername) {
+		benutzername = User.QuoteForMySQL(benutzername);
+		ResultSet rs = Geteilte_Einkaufsliste.getMySQL().getResult("SELECT * FROM User WHERE "+Wert.Benutzername.getName()+"='"+benutzername+"'");
+		try {
+			if(rs.next()) {
+				return true;
+			}else {
+				return false;
+			}
+		} catch (SQLException e) {
+			if(Utils.debug)
+				e.printStackTrace();
+			
+			return false;
+		}
+	}
+	
+	@SuppressWarnings("deprecation")
+	public static void listIDS() {
+		ResultSet rs = Geteilte_Einkaufsliste.getMySQL().getResult("SELECT * FROM User");
+		try {
+			System.out.println("-------- User ---------");
+			while (rs.next()) {
+				System.out.println(""+rs.getInt("UserID")+" -> "+rs.getString("Benutzername")+" "+String.valueOf(new Date(rs.getLong("Geburtsdatum")).toLocaleString())+"| -> Nachname: "+ rs.getString("Nachname")+" Vorname: "+ rs.getString("Vorname"));
+				
+			}
+			System.out.println("-------- User ---------");
+		} catch (SQLException e) {
+			if(Utils.debug)
+				e.printStackTrace();
+			
+			return;
+		}
 	}
 
 	public int getiD() {
