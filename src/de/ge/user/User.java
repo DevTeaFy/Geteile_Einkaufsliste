@@ -88,10 +88,10 @@ public class User {
 			ResultSet invites = mysql.getResult("SELECT * FROM " + Tabellen.User_Send_Gruppen_Invite.getName()
 					+ " WHERE " + Wert.UserID.getName() + "=" + this.iD + "");
 				while (invites.next()) {
-					ResultSet UserIDToInvitedb = mysql.getResult("SELECT * FROM User_Send_Gruppen_Invite WHERE UserID="+this.iD);
+					ResultSet UserIDToInvitedb = mysql.getResult("SELECT * FROM "+Tabellen.User_Send_Gruppen_Invite.getName()+" WHERE "+Wert.UserID.getName()+"="+this.iD);
 					HashMap<Integer, Integer> map = new HashMap<>();
 					while (UserIDToInvitedb.next()) {
-						map.put(UserIDToInvitedb.getInt("InvitetdUserID"), UserIDToInvitedb.getInt("GruppenID"));
+						map.put(UserIDToInvitedb.getInt(Wert.InvitetdUserID.getName()), UserIDToInvitedb.getInt(Wert.GruppenID.getName()));
 					}
 					if (map.containsKey(UserIDToInvite)) {
 						int gruppenid = map.get(UserIDToInvite);
@@ -121,9 +121,31 @@ public class User {
 				JOptionPane.INFORMATION_MESSAGE);
 		try {
 			mysql.getCon().createStatement().executeUpdate(
-					"INSERT INTO User_Send_Gruppen_Invite(SendID,UserID,InvitetdUserID,GruppenID) VALUES (Null,"
+					"INSERT INTO "+Tabellen.User_Send_Gruppen_Invite.getName()+"(SendID,UserID,InvitetdUserID,GruppenID) VALUES (Null,"
 							+ this.iD + "," + UserIDToInvite + "," + GruppenID + ")");
 		} catch (SQLException e) {
+			if(Utils.debug)
+				e.printStackTrace();
+		}
+	}
+	
+	public void deleteEinkaufsliste(String Listenname) {
+		Listenname = QuoteForMySQL(Listenname);
+		try {
+			String wtf = "SELECT * FROM "+Tabellen.Einkaufslisten.getName()+" WHERE "+Wert.Listenname.getName()+"='"+Listenname+"' AND "+Wert.UserID.getName()+"="+this.iD;
+			ResultSet rs = mysql.getResult(wtf);
+			if(rs.next()) {
+				int id = rs.getInt(Wert.ListenID.getName());
+//				ResultSet rs1 = mysql.getResult("SELECT * FROM "+Tabellen.Listen_Inhalte.getName()+" WHERE "+Wert.ListenID.getName()+"="+id);
+//				while(rs1.next()) {
+//					mysql.update("DELETE FROM "+Tabellen.Listen_Inhalte.getName()+" WHERE "+Wert.ListenID.getName()+"="+rs1.getInt(Wert.ListenID.getName()));
+//				} GEHT DAS SO=?
+				mysql.update("DELETE FROM "+Tabellen.User_hat_listen.getName()+" WHERE "+Wert.ListenID.getName()+"="+id);
+				mysql.update("DELETE FROM "+Tabellen.Einkaufslisten.getName()+" WHERE "+Wert.ListenID.getName()+"="+id);
+			} else {
+				return;
+			}
+		}catch (SQLException e) {
 			if(Utils.debug)
 				e.printStackTrace();
 		}
@@ -337,14 +359,15 @@ public class User {
 			if (isok) {
 				try {
 					Statement st = mysql.getCon().createStatement();
-					st.executeUpdate("INSERT INTO Gruppen(GruppenID, GruppenName, ErstellerID) VALUES (Null,'"+Gruppenname+"','"+this.iD+"')");
+					st.executeUpdate("INSERT INTO "+Tabellen.Gruppen.getName()+"(GruppenID, GruppenName, ErstellerID) VALUES (Null,'"+Gruppenname+"','"+this.iD+"')");
 					ResultSet rs1 = mysql.getResult("SELECT * FROM Gruppen ORDER BY GruppenID DESC LIMIT 1");
 					int toreturn = -1;
 					if(rs1.next()) {
-						toreturn = rs1.getInt("GruppenID");
+						toreturn = rs1.getInt(Wert.GruppenID.getName());
 					}
 					gruppenid.put(Gruppenname, toreturn);
-					st.executeUpdate("INSERT INTO U_IN_G(UserID, GruppenID) VALUE ("+this.iD+","+toreturn+")");
+					st.executeUpdate("INSERT INTO "+Tabellen.U_IN_G.getName()+"(UserID, GruppenID) VALUE ("+this.iD+","+toreturn+")");
+
 					return toreturn;
 				} catch (SQLException e) {
 					if (Utils.debug)
@@ -352,7 +375,7 @@ public class User {
 					return -1;
 				}
 			} else {
-				return rs.getInt("GruppenID");
+				return rs.getInt(Wert.GruppenID.getName());
 			}
 		} catch (SQLException e1) {
 			if (Utils.debug)

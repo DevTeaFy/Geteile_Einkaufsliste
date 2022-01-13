@@ -113,7 +113,7 @@ public class MySQL {
 			String toreturn = rs.getString(rueckgabewert.getName());
 			return toreturn;
 			}else {
-				return "ERRORRRR";
+				return "ERRORRRR (WTF)";
 			}
 		} catch (SQLException e) {
 			if(Utils.debug)

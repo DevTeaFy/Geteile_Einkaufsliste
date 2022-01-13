@@ -375,8 +375,11 @@ public class MainScreen {
 
 	public void btnListeLoeschen_ActionPerformed(ActionEvent e) {
 		if (e.getSource() == btnListeLoeschen) {
-
-			listModel.removeElement(tfListenName.getText());
+			if(cbbListen.getSelectedItem().toString().equals("Eigenelisten")) {
+				u.deleteEinkaufsliste(getlListen().getSelectedValue().toString());
+				listModel.removeElement(getlListen().getSelectedValue().toString());
+				
+			}
 			// listModel.removeElementAt(Integer.valueOf(tfListenName.getText()));
 			// listModel.remove(index);
 
