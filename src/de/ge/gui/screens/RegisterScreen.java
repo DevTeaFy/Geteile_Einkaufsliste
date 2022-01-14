@@ -241,6 +241,7 @@ public class RegisterScreen {
 						if(Utils.debug)System.out.println("Der Benutzername: "+tfBenutzerName.getText()+" ist Vergeben!");
 						return;
 					}else {
+						System.out.println("hey");
 						tfBenutzerName.setBackground(PrettyColor.LITHEBLUE);
 						User.createUser(tfBenutzerName.getText(), tfNachname.getText(), tfName.getText(), ((Date)datepickerGeburtsdatum.getJDateInstantPanel().getModel().getValue()).getTime(), tfPasswort.getText());
 						frame.dispose();

@@ -46,15 +46,19 @@ public class OpenWindowListener implements WindowListener {
 	public void windowDeiconified(WindowEvent e) {
 		
 	}
-
+	private int count = 0;
 	@Override
 	public void windowActivated(WindowEvent e) {
-			if(Utils.hasInternetConnection()) {
+		if(count >= 1) {
+			return;
+		}
+		if(Utils.hasInternetConnection()) {
+			count++;
 			ls.getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 			Geteilte_Einkaufsliste.getMySQL().connectMySQL();
 			ls.getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 			if(Utils.debug)
-				User.listIDS();
+			User.listIDS();
 		}
 	}
 

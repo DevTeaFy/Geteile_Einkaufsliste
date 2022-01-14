@@ -10,10 +10,13 @@ import java.util.Random;
 
 import javax.swing.JOptionPane;
 
+import de.ge.gui.screens.LoginScreen;
+import de.ge.gui.screens.MainScreen;
 import de.ge.main.Geteilte_Einkaufsliste;
 import de.ge.mysql.MySQL;
 import de.ge.utils.Tabellen;
 import de.ge.utils.Utils;
+import de.ge.utils.Verschluesselung;
 import de.ge.utils.Wert;
 
 public class User {
@@ -26,6 +29,7 @@ public class User {
 	private HashMap<String, Integer> listenid = new HashMap<>();
 	private HashMap<String, Integer> gruppenlistenid = new HashMap<>();
 	private HashMap<String, Integer> gruppenid = new HashMap<>();
+	private static Verschluesselung vs = new Verschluesselung();
 
 	private MySQL mysql = Geteilte_Einkaufsliste.getMySQL();
 
@@ -34,8 +38,22 @@ public class User {
 	}
 
 	public User login(String benutzername, String pw) {
+		if(Utils.debug)
+			System.out.println("------------- Login versuch -------------");
+			
+		if(!Utils.hasInternetConnection()) {
+			JOptionPane.showMessageDialog(null,"Du hast kein Internet.","Internet",JOptionPane.ERROR_MESSAGE);
+		}
+		
+		if(Geteilte_Einkaufsliste.getMySQL().getCon() == null) {
+			JOptionPane.showMessageDialog(null,"Du hast keine verbindung zur Datenbank","Datenbank",JOptionPane.ERROR_MESSAGE);
+		}
+		
+		
 		String datenbankpw = mysql.getString("*", Tabellen.User, Wert.Benutzername, benutzername, Wert.Password);
-		if (pw.equals(datenbankpw)) {
+		System.out.println(datenbankpw);
+		System.out.println(pw);
+		if (vs.checkPassword(pw, datenbankpw)) {
 			this.iD = mysql.getInt("*", Tabellen.User, Wert.Benutzername, benutzername, Wert.UserID);
 			this.Nachname = mysql.getString("*", Tabellen.User, Wert.Benutzername, benutzername, Wert.Nachname);
 			this.vorname = mysql.getString("*", Tabellen.User, Wert.Benutzername, benutzername, Wert.Vorname);
@@ -44,11 +62,17 @@ public class User {
 			this.gruppenid = getGruppenNameHashMap();
 			this.gruppenlistenid = getGruppenListenname();
 			this.listenid = getListenname();
+			if(Utils.debug)
+				System.out.println("------------- Login Ende -------------");
 			return this;
 		} else {
 			System.out.println("Pw falsch!!!");
+			if(Utils.debug)
+				System.out.println("------------- Login Ende -------------");
 			return null;
 		}
+
+		
 	}
 
 	public int getGruppenIDByName(String GruppenName) {
@@ -388,7 +412,10 @@ public class User {
 		Benutzername = QuoteForMySQL(Benutzername);
 		name = QuoteForMySQL(name);
 		vorname = QuoteForMySQL(vorname);
-		pw = QuoteForMySQL(pw);
+		System.out.println(pw);
+		pw = vs.hash(pw);
+		System.out.println(pw);
+		
 		MySQL mysql = Geteilte_Einkaufsliste.getMySQL();
 		int id = new Random().nextInt(999999);
 		do {

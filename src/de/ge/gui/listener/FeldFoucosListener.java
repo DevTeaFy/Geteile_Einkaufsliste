@@ -4,7 +4,6 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
 import de.ge.gui.screens.RegisterScreen;
-import de.ge.main.Geteilte_Einkaufsliste;
 import de.ge.user.User;
 import de.ge.utils.PrettyColor;
 import de.ge.utils.Utils;

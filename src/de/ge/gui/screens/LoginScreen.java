@@ -14,7 +14,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
@@ -23,9 +22,7 @@ import de.ge.gui.listener.OpenWindowListener;
 import de.ge.main.Geteilte_Einkaufsliste;
 import de.ge.user.User;
 import de.ge.utils.PrettyColor;
-import de.ge.utils.Tabellen;
 import de.ge.utils.Utils;
-import de.ge.utils.Wert;
 
 public class LoginScreen {
 
@@ -154,35 +151,38 @@ public class LoginScreen {
 	}
 	
 	private void tryLogin() {
-		if(Utils.debug)
-			System.out.println("------------- Login versuch -------------");
-			
-		if(!Utils.hasInternetConnection()) {
-			JOptionPane.showMessageDialog(this.frame,"Du hast kein Internet.","Internet",JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-		
-		if(Geteilte_Einkaufsliste.getMySQL().getCon() == null) {
-			JOptionPane.showMessageDialog(this.frame,"Du hast keine verbindung zur Datenbank","Datenbank",JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-		String pw = pwfield.getText();
-		String datenbankpw = Geteilte_Einkaufsliste.getMySQL().getString("*", Tabellen.User, Wert.Benutzername, useridfield.getText(), Wert.Password);
-		
-		if(pw.equals(datenbankpw)) {
-			Geteilte_Einkaufsliste.setUser(new User(useridfield.getText(), datenbankpw));
-			if(Utils.debug) {
-				System.out.println("Login erfolgreich");
-				System.out.println(Geteilte_Einkaufsliste.getUser().getVorname());
-			}
-			frame.dispose();
+		Geteilte_Einkaufsliste.setUser(new User(useridfield.getText(), pwfield.getText()));
+		if(Geteilte_Einkaufsliste.getUser().getiD() > 0) {
+			this.frame.dispose();
 			new MainScreen();
-		}else {
-			System.out.println("Pw falsch!!!");
 		}
+//		if(Utils.debug)
+//			System.out.println("------------- Login versuch -------------");
+//			
+//		if(!Utils.hasInternetConnection()) {
+//			JOptionPane.showMessageDialog(this.frame,"Du hast kein Internet.","Internet",JOptionPane.ERROR_MESSAGE);
+//			return;
+//		}
+//		
+//		if(Geteilte_Einkaufsliste.getMySQL().getCon() == null) {
+//			JOptionPane.showMessageDialog(this.frame,"Du hast keine verbindung zur Datenbank","Datenbank",JOptionPane.ERROR_MESSAGE);
+//			return;
+//		}
+//		String pw = pwfield.getText();
+//		String datenbankpw = Geteilte_Einkaufsliste.getMySQL().getString("*", Tabellen.User, Wert.Benutzername, useridfield.getText(), Wert.Password);
+//		
+//		if(pw.equals(datenbankpw)) {
+//			Geteilte_Einkaufsliste.setUser(new User(useridfield.getText(), datenbankpw));
+//			if(Utils.debug) {
+//				System.out.println("Login erfolgreich");
+//				System.out.println(Geteilte_Einkaufsliste.getUser().getVorname());
+//			}
+//			frame.dispose();
+//			new MainScreen();
+//		}else {
+//			System.out.println("Pw falsch!!!");
+//		}
 		
-		if(Utils.debug)
-			System.out.println("------------- Login Ende -------------");
 	}
 	
 	private class KeyListenerByLogin implements KeyListener{

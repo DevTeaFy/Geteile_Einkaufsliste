@@ -18,7 +18,7 @@ public class Geteilte_Einkaufsliste {
         mySQL.setPassword("hDGvXGYMfkHTI0T5k0eu");
 		new LoginScreen();
 	}
-
+	
 	public static MySQL getMySQL() {
 		return mySQL;
 	}
