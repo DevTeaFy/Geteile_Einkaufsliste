@@ -75,7 +75,7 @@ public class MySQL {
 //			st.executeUpdate("DROP TABLE IF EXISTS Gruppen");
 			
 			st.executeUpdate("CREATE TABLE IF NOT EXISTS User(UserID int UNIQUE NOT NULL AUTO_INCREMENT, Benutzername VARCHAR(50), Nachname VARCHAR(50), Vorname VARCHAR(50), Geburtsdatum Long, Password TEXT, PRIMARY KEY(UserID), UNIQUE (Benutzername))");
-			st.executeUpdate("CREATE TABLE IF NOT EXISTS User_Send_Gruppen_Invite(SendID int NOT NULL AUTO_INCREMENT,UserID int NOT NULL, InvitetdUserID int NOT NULL, GruppenID int NOT NULL, FOREIGN KEY (UserID) REFERENCES User (UserID), PRIMARY KEY(SendID))");
+			st.executeUpdate("CREATE TABLE IF NOT EXISTS User_Send_Gruppen_Invite(SendID int NOT NULL AUTO_INCREMENT,UserID int NOT NULL, InvitedUserID int NOT NULL, GruppenID int NOT NULL, FOREIGN KEY (UserID) REFERENCES User (UserID), PRIMARY KEY(SendID))");
 			st.executeUpdate("CREATE TABLE IF NOT EXISTS Gruppen(GruppenID int NOT NULL AUTO_INCREMENT, GruppenName VARCHAR(50), ErstellerID int, PRIMARY KEY(GruppenID))");
 			st.executeUpdate("CREATE TABLE IF NOT EXISTS U_IN_G(UserID int NOT NULL, GruppenID int NOT NULL, FOREIGN KEY (UserID) REFERENCES User (UserID), FOREIGN KEY (GruppenID) REFERENCES Gruppen (GruppenID),PRIMARY KEY (UserID,GruppenID))");
 			st.executeUpdate("CREATE TABLE IF NOT EXISTS Einkaufslisten(ListenID int NOT NULL AUTO_INCREMENT, GruppenID int NOT NULL, UserID int NOT NULL, Listenname VARCHAR(50),PRIMARY KEY (ListenID))");

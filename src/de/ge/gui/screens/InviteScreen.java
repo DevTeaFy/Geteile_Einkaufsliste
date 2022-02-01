@@ -219,11 +219,11 @@ public class InviteScreen {
 			tp.removeRow(i);
 		}
 		MySQL mysql = Geteilte_Einkaufsliste.getMySQL();
-		ResultSet rs = mysql.getResult("SELECT * FROM "+Tabellen.User_Send_Gruppen_Invite.getName()+" WHERE "+Wert.InvitetdUserID.getName()+"="+UserID);
+		ResultSet rs = mysql.getResult("SELECT * FROM "+Tabellen.User_Send_Gruppen_Invite.getName()+" WHERE "+Wert.InvitedUserID.getName()+"="+UserID);
 		try {
 			while (rs.next()) {
 				ResultSet user = mysql.getResult("SELECT * FROM "+Tabellen.User.getName()+" WHERE "+Wert.UserID.getName()+"="+rs.getInt(Wert.UserID.getName()));
-				ResultSet inviteduser = mysql.getResult("SELECT * FROM "+Tabellen.User.getName()+" WHERE "+Wert.UserID.getName()+"="+rs.getInt(Wert.InvitetdUserID.getName()));
+				ResultSet inviteduser = mysql.getResult("SELECT * FROM "+Tabellen.User.getName()+" WHERE "+Wert.UserID.getName()+"="+rs.getInt(Wert.InvitedUserID.getName()));
 				int GruppenID = rs.getInt(Wert.GruppenID.getName());
 				ResultSet gruppe = mysql.getResult("SELECT * FROM "+Tabellen.Gruppen.getName()+" WHERE "+Wert.GruppenID.getName()+"="+GruppenID);
 				if(user.next() && inviteduser.next() && gruppe.next()) {

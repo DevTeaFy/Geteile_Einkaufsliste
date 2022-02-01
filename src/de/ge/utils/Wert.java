@@ -19,7 +19,7 @@ public enum Wert {
 	Typ("Typ"),
 	Preis("Preis"),
 	Menge("Menge"),
-	InvitetdUserID("InvitetdUserID"),
+	InvitedUserID("InvitedUserID"),
 	ErstellerID("ErstellerID");
 	
 	
