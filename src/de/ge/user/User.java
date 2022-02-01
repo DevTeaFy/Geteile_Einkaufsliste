@@ -175,16 +175,33 @@ public class User {
 		}
 	}
 
-	public void acceptGruppenInvite() {
-
+	public void acceptGruppenInvite(int GruppenID) {
+		ResultSet rs = mysql.getResult("SELECT * FROM "+Tabellen.User_Send_Gruppen_Invite.getName()+" WHERE "+Wert.InvitetdUserID.getName()+"="+getiD()+" AND "+Wert.GruppenID.getName()+"="+GruppenID);
+		try {
+			if(rs.next()) {
+				int gruppenid = rs.getInt(Wert.GruppenID.getName());
+				JoinGroup(gruppenid);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void denyGruppenInvite() {
 
 	}
 
-	public void revokeGruppenInvite() {
-
+	public void revokeGruppenInvite(int invitedID,int GruppenID) {
+		ResultSet rs = mysql.getResult("SELECT * FROM "+Tabellen.User_Send_Gruppen_Invite.getName()+" WHERE "+Wert.InvitetdUserID.getName()+"="+invitedID+" AND "+Wert.GruppenID.getName()+"="+GruppenID);
+		try {
+			if(rs.next()) {
+				mysql.update("DELETE FROM "+Tabellen.User_Send_Gruppen_Invite.getName()+" WHERE "+Wert.InvitetdUserID.getName()+"="+invitedID+" AND "+Wert.GruppenID.getName()+"="+GruppenID);
+			}else {
+				JOptionPane.showMessageDialog(null, "Du hast einen Error in deinem Syntax!");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public ArrayList<String> getListennameAsArrayList(){
@@ -358,6 +375,20 @@ public class User {
 		}
 	}
 
+	private void JoinGroup(int GruppenID) {
+		ResultSet rs = mysql.getResult("SELECT * FROM "+Tabellen.U_IN_G.getName()+" WHERE "+Wert.UserID.getName()+"="+getiD()+" AND "+Wert.GruppenID.getName()+"="+GruppenID);
+		try {
+			if(rs.next()) {
+				JOptionPane.showMessageDialog(null, "Du bist schon in dieser Gruppe seltsam...");
+			}else {
+				mysql.update("DELETE FROM "+Tabellen.User_Send_Gruppen_Invite.getName()+" WHERE "+Wert.GruppenID.getName()+"="+GruppenID+" AND "+Wert.UserID.getName()+"="+getiD());
+				mysql.update("INSERT INTO "+Tabellen.U_IN_G.getName()+"(UserID,GruppenID) VALUES ('"+getiD()+"','"+GruppenID+"')");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public int createGruppe(String Gruppenname) {
 		Gruppenname = QuoteForMySQL(Gruppenname);
 		try {

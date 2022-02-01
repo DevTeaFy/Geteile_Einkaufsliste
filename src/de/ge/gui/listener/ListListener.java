@@ -2,7 +2,6 @@ package de.ge.gui.listener;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Iterator;
 
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;

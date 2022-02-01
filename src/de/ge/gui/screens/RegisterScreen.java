@@ -146,6 +146,8 @@ public class RegisterScreen {
 		p.put("text.month", "Month");
 		p.put("text.year", "Year");
 		JDatePanelImpl datePanel = new JDatePanelImpl(model,p);
+		datePanel.setBackground(PrettyColor.LITHEBLUE);
+		datePanel.setForeground(PrettyColor.GREEN);
 		this.datepickerGeburtsdatum = new JDatePickerImpl(datePanel, new DateLabelFormatter());
 		this.datepickerGeburtsdatum.setBounds((int)((frameWidth/2)-(160/2)), (lblGeburtsdatum.getBounds().y+lblGeburtsdatum.getBounds().height+(abstand)), 160, 30);
 		this.datepickerGeburtsdatum.setBorder(BorderFactory.createEmptyBorder());

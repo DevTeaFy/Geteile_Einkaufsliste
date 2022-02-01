@@ -21,7 +21,7 @@ public class Utils {
 		    return true;
 		} catch(UnknownHostException e) {
 			if(Utils.debug) {
-				System.out.println("User has KEIN Internet."); 
+				System.out.println("User hat KEIN Internet."); 
 		    	e.printStackTrace();
 			}
 			return false;

@@ -7,6 +7,10 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
@@ -18,17 +22,21 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.WindowConstants;
+import javax.swing.table.DefaultTableModel;
 
 import de.ge.gui.listener.CloseWindowListener;
 import de.ge.main.Geteilte_Einkaufsliste;
+import de.ge.mysql.MySQL;
 import de.ge.utils.PrettyColor;
+import de.ge.utils.Tabellen;
+import de.ge.utils.Wert;
 
 public class InviteScreen {
 	
 	private JFrame frame = new JFrame();
 	private JButton btnGruppeertellen = new JButton();
-	private JTable jTable1 = new JTable(5, 5);
-	private JScrollPane jTable1ScrollPane = new JScrollPane(jTable1);
+	private JTable jTable = new JTable(5, 3);// Zeilen / Spalten
+	private JScrollPane jTable1ScrollPane = new JScrollPane(jTable);
 	private JList lListen = new JList();
 	private JScrollPane lListenScrollPane = new JScrollPane(lListen);
 	private JButton btnZurueck = new JButton();
@@ -67,13 +75,27 @@ public class InviteScreen {
 		btnGruppeertellen.setBorderPainted(false);
 		btnGruppeertellen.setContentAreaFilled(false);
 		cp.add(btnGruppeertellen);
+		
+		jTable.addFocusListener(new FocusListener() {
+			
+			@Override
+			public void focusLost(FocusEvent e) {
+				btnEinladungabehlen.hide();
+				btnEinladungannehmen.hide();
+				return;
+			}
+			
+			@Override
+			public void focusGained(FocusEvent e) {
+				btnEinladungannehmen.show();
+				btnEinladungabehlen.show();
+				return;
+			}
+		});
+		jTable1ScrollPane = new JScrollPane(jTable);
 		jTable1ScrollPane.setBounds(24, 24, 204, 358);
-		jTable1.getColumnModel().getColumn(0).setHeaderValue("Title 1");
-		jTable1.getColumnModel().getColumn(1).setHeaderValue("Title 2");
-		jTable1.getColumnModel().getColumn(2).setHeaderValue("Title 3");
-		jTable1.getColumnModel().getColumn(3).setHeaderValue("Title 4");
-		jTable1.getColumnModel().getColumn(4).setHeaderValue("Title 5");
 		cp.add(jTable1ScrollPane);
+		setInvitesInToTable(Geteilte_Einkaufsliste.getUser().getiD());
 
 		
 		btnEinladungannehmen.setBounds(245, 183, 139, 25);
@@ -156,7 +178,14 @@ public class InviteScreen {
 	} 
 
 	public void btnEinladungannehmen_ActionPerformed(ActionEvent evt) {
-
+		int row = jTable.getSelectedRow();
+		int col = jTable.getSelectedColumn();
+		if(row >= 0 && col >= 0) {
+			String Gruppenname = String.valueOf(jTable.getModel().getValueAt(row, 2));
+			System.out.println(Gruppenname);// Berücksichtige den ersteller der Gruppe den der Name ist undeutlich könnte von mehreren Usern den selben namen haben....
+			int grouppenID = Integer.valueOf(22);
+			
+		}
 	} 
 
 	public void btnEinladungabehlen_ActionPerformed(ActionEvent evt) {
@@ -175,5 +204,37 @@ public class InviteScreen {
 	public void btnWiederrufen_ActionPerformed(ActionEvent evt) {
 		
 	} 
+	
+	public DefaultTableModel getModel() {
+		return (DefaultTableModel) jTable.getModel();
+	}
+	public JTable getjTable() {
+		return jTable;
+	}
+	
+	public void setInvitesInToTable(int UserID) {
+		DefaultTableModel tp = new DefaultTableModel(new String[]{"Eingeladen von","Eingeladen","Gruppen Name"}, 0);
+		
+		for (int i = tp.getRowCount()-1;i>=0;i--) {
+			tp.removeRow(i);
+		}
+		MySQL mysql = Geteilte_Einkaufsliste.getMySQL();
+		ResultSet rs = mysql.getResult("SELECT * FROM "+Tabellen.User_Send_Gruppen_Invite.getName()+" WHERE "+Wert.InvitetdUserID.getName()+"="+UserID);
+		try {
+			while (rs.next()) {
+				ResultSet user = mysql.getResult("SELECT * FROM "+Tabellen.User.getName()+" WHERE "+Wert.UserID.getName()+"="+rs.getInt(Wert.UserID.getName()));
+				ResultSet inviteduser = mysql.getResult("SELECT * FROM "+Tabellen.User.getName()+" WHERE "+Wert.UserID.getName()+"="+rs.getInt(Wert.InvitetdUserID.getName()));
+				int GruppenID = rs.getInt(Wert.GruppenID.getName());
+				ResultSet gruppe = mysql.getResult("SELECT * FROM "+Tabellen.Gruppen.getName()+" WHERE "+Wert.GruppenID.getName()+"="+GruppenID);
+				if(user.next() && inviteduser.next() && gruppe.next()) {
+				Object[] row = new Object[]{user.getString(Wert.Benutzername.getName()),inviteduser.getString(Wert.Benutzername.getName()),gruppe.getString(Wert.GruppenName.getName())};
+					tp.addRow(row);
+				}
+			}
+			getjTable().setModel(tp);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 }
